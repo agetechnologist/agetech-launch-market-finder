@@ -1,0 +1,1885 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AgeTech Launch Market Finder</title>
+<meta name="description" content="Where should you build your next AgeTech company? Answer a few questions and see how every US county scores, using Urban Institute, Census, CMS and USDA data.">
+<meta property="og:title" content="AgeTech Launch Market Finder">
+<meta property="og:description" content="Answer a few questions about your AgeTech company and see how every US county scores as a launch market.">
+<style>
+/* Theme tokens the dashboard page expects. Light values first, dark values for the OS dark setting. */
+:root {
+  color-scheme: light;
+  --color-bg: #f7f7f4;
+  --color-panel: #ffffff;
+  --color-fg: #1f1e1c;
+  --color-fg-muted: #66655e;
+  --color-border-line: #e2e0d9;
+  --color-ok: #1a7f37;
+  --color-warn: #b7791f;
+  --color-bad: #c0392b;
+  --cds-text-secondary: #57564f;
+  --cds-chart-grid: #ecebe5;
+  --cds-chart-axis: #c8c6be;
+  --cds-chart-reference: #8a8880;
+  --cds-chart-muted: #c8c6be;
+  --cds-surface-popover: #ffffff;
+  --cds-border: rgba(20, 20, 18, 0.12);
+  --cds-shadow-popover: 0 6px 20px rgba(20, 20, 18, 0.14);
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+  --font-anthropic-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-anthropic-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --cds-font-size-caption: 0.8125rem;
+  --cds-font-size-body: 0.9375rem;
+  --cds-font-size-heading: 1.125rem;
+  --cds-font-size-title: 2rem;
+  --cds-font-weight-medium: 600;
+  --cds-gap-xs: 4px; --cds-gap-sm: 8px; --cds-gap-md: 12px; --cds-gap-lg: 20px; --cds-gap-xl: 28px;
+  --cds-pad-xs: 4px; --cds-pad-sm: 8px; --cds-pad-md: 12px; --cds-pad-lg: 18px; --cds-pad-xl: 24px;
+  --cds-radius: 10px;
+  --cds-dur-slow: 400ms;
+  --cds-ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --color-bg: #161615;
+    --color-panel: #1f1f1d;
+    --color-fg: #efeee9;
+    --color-fg-muted: #a7a59d;
+    --color-border-line: #3a3935;
+    --color-ok: #3fb950;
+    --color-warn: #d9a441;
+    --color-bad: #e66767;
+    --cds-text-secondary: #c3c2b7;
+    --cds-chart-grid: #2d2c29;
+    --cds-chart-axis: #4a4944;
+    --cds-chart-reference: #8f8d85;
+    --cds-chart-muted: #4a4944;
+    --cds-surface-popover: #2a2926;
+    --cds-border: rgba(255, 255, 255, 0.12);
+    --cds-shadow-popover: 0 6px 20px rgba(0, 0, 0, 0.5);
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-3: #199e70;
+  }
+}
+html { background: var(--color-bg); }
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-anthropic-sans);
+  font-size: var(--cds-font-size-body);
+  line-height: 1.45;
+  -webkit-text-size-adjust: 100%;
+}
+#dash-root {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding-block: 28px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+[hidden] { display: none !important; }
+a { color: var(--series-1); }
+/* Dashboard-look select: the arrow sits in the right padding. */
+.dash-select {
+  font: inherit;
+  color: var(--color-fg);
+  background-color: var(--color-panel);
+  border: 1px solid var(--color-border-line);
+  border-radius: 8px;
+  padding: 6px 30px 6px 10px;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23888780' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  cursor: pointer;
+}
+.dash-select:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 1px; }
+/* Placeholder bar while a number loads. */
+.dash-skeleton { color: transparent !important; background-color: var(--color-border-line); border-radius: 6px; display: inline-block; min-width: 4ch; }
+.site-footer { margin-top: 36px; padding-top: 16px; border-top: 1px solid var(--color-border-line); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.5; max-width: 80ch; }
+.site-footer p { margin: 0 0 6px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>window.DASH_CONFIG = {"datasets":{"counties":"data/counties.json","metrics":"data/metrics.json","metric_info":"data/metric_info.json","nursing_homes":"data/nursing_homes.json","businesses":"data/businesses.json","medicare_advantage":"data/medicare_advantage.json","rural_codes":"data/rural_codes.json","county_shapes":"data/county_shapes.json"},"params":{"pay":["consumer"],"aud":"75","reach":"home","medicare":"both","area":"any","mix":"median_net_worth@75-84:2,median_income@75-84:1,residents@75+:2,within30@75+:3,per_sqmi@75+:3","mfloor":1000,"state":"","county":"","metric":"median_net_worth","age":"75-84","xaxis":"people_per_sqmi","order":"desc","minpop":1000}};</script>
+<script src="dash-runtime.js"></script>
+</head>
+<body>
+<main id="dash-root">
+<style>
+/* Layout: header and tabs; tab 1 runs top to bottom as survey -> recipe -> filters -> results (map beside the county profile when wide) -> ranking; tab 2 is the single-metric explorer. */
+#explorer { container-type: inline-size; }
+.ax { display: grid; gap: var(--cds-gap-lg); }
+.ax-head { display: grid; gap: var(--cds-gap-sm); }
+.ax-title { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); line-height: 1.15; margin: 0; text-wrap: balance; }
+.ax-intro { margin: 0; max-width: 70ch; color: var(--color-fg-muted); line-height: 1.5; }
+.ax-lede { margin: 0; max-width: 70ch; line-height: 1.55; }
+.ax-lede b { font-weight: var(--cds-font-weight-medium); }
+.ax-controls { display: flex; flex-wrap: wrap; gap: var(--cds-gap-md); align-items: flex-end; }
+.ax-field { display: grid; gap: var(--cds-gap-xs); min-width: 0; max-width: 100%; }
+.ax-field label { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.ax-field .dash-select { max-width: 100%; }
+.ax-field-metric .dash-select { width: 24rem; }
+.ax-meta { flex-basis: 100%; margin: 0; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.ax-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: var(--cds-gap-md); }
+.ax-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); min-width: 0; display: grid; gap: var(--cds-gap-md); align-content: start; }
+.ax-kpi { gap: var(--cds-gap-xs); }
+.ax-kpi-label, .ax-kpi-note { margin: 0; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.ax-kpi-value { margin: 0; font-family: var(--font-anthropic-serif); font-weight: 400; font-size: 2rem; line-height: 1.15; overflow-wrap: anywhere; }
+.ax-unit { font-family: var(--font-anthropic-sans); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.ax-card-head { display: grid; gap: var(--cds-gap-xs); min-width: 0; }
+.ax-card-head-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: var(--cds-gap-md); }
+.ax-card-head-row > div:first-child { min-width: 0; flex: 1 1 16rem; }
+.ax-card h2 { margin: 0; font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); text-wrap: balance; }
+.ax-desc { margin: 0; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); max-width: 70ch; }
+.ax-grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: var(--cds-gap-lg); }
+.ax-chart { position: relative; min-width: 0; }
+.ax-plot { position: relative; }
+.ax-map { min-height: 220px; }
+.ax-scatter { min-height: 280px; }
+.ax-bands { min-height: 240px; }
+.ax-chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.ax-chart svg text { fill: var(--cds-text-secondary); font-size: var(--cds-font-size-caption); font-family: var(--font-anthropic-sans); }
+.ax-chart .tick line { stroke: var(--cds-chart-grid); }
+.ax-chart .domain { stroke: var(--cds-chart-axis); }
+.ax-legend { display: flex; flex-wrap: wrap; gap: var(--cds-gap-xs) var(--cds-gap-md); margin: 0 0 var(--cds-gap-sm); font-size: var(--cds-font-size-caption); color: var(--cds-text-secondary); font-variant-numeric: tabular-nums; }
+.ax-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.ax-sw { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+.ax-sw-empty { background-color: var(--color-panel); box-shadow: inset 0 0 0 1.5px var(--color-border-line); }
+.ax-tip { position: absolute; z-index: 2; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); box-shadow: var(--cds-shadow-popover); border-radius: var(--cds-radius); padding: var(--cds-pad-sm) var(--cds-pad-md); font-size: var(--cds-font-size-caption); line-height: 1.45; max-width: 260px; display: grid; gap: 2px; }
+.ax-tip strong { font-weight: var(--cds-font-weight-medium); color: var(--color-fg); }
+.ax-tip .ax-tip-row { color: var(--cds-text-secondary); }
+.ax-tip .ax-tip-row b { color: var(--color-fg); font-weight: var(--cds-font-weight-medium); font-variant-numeric: tabular-nums; }
+.ax-band { display: grid; grid-template-columns: minmax(7.5rem, 10rem) minmax(0, 1fr) auto; gap: var(--cds-gap-sm) var(--cds-gap-md); align-items: center; padding-block: 6px; }
+.ax-band-name { font-size: var(--cds-font-size-body); }
+.ax-band-sub { display: block; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); font-variant-numeric: tabular-nums; }
+.ax-band-track { height: 14px; border-radius: 0 4px 4px 0; border-left: 1px solid var(--cds-chart-axis); }
+.ax-band-bar { height: 100%; border-radius: 0 4px 4px 0; }
+.ax-band-val { font-variant-numeric: tabular-nums; font-weight: var(--cds-font-weight-medium); text-align: right; min-width: 5.5rem; }
+.ax-table-controls { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); align-items: flex-end; }
+.ax-input { font: inherit; color: var(--color-fg); background-color: var(--color-bg); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: 6px 10px; width: 12rem; max-width: 100%; min-width: 0; }
+.ax-input:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 1px; }
+.ax-table-wrap { overflow-x: auto; }
+.ax-table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.ax-table th { text-align: left; font-weight: var(--cds-font-weight-medium); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); border-bottom: 1px solid var(--color-border-line); padding: 8px 10px; vertical-align: bottom; }
+.ax-table td { padding: 7px 10px; border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+.ax-table .ax-num { text-align: right; }
+.ax-table th.ax-num { max-width: 9rem; white-space: normal; }
+.ax-table td.ax-msg { white-space: normal; color: var(--color-fg-muted); }
+.ax-table tbody tr.lm-row { cursor: pointer; }
+.ax-table tbody tr.lm-row:hover td { background-color: color-mix(in oklab, var(--color-fg) 5%, transparent); }
+.ax-table tbody tr.is-selected td { background-color: color-mix(in oklab, var(--color-fg) 9%, transparent); }
+.ax-error { margin: 0; color: var(--color-bad); }
+.ax-notes summary { cursor: pointer; font-weight: var(--cds-font-weight-medium); }
+.ax-notes ul { margin: var(--cds-gap-sm) 0 0; padding-left: 1.2em; display: grid; gap: var(--cds-gap-xs); max-width: 75ch; color: var(--color-fg-muted); line-height: 1.5; }
+
+/* Launch market finder */
+.lm-tabs { display: flex; flex-wrap: wrap; gap: var(--cds-gap-md); border-bottom: 1px solid var(--color-border-line); }
+.lm-tab { font: inherit; background-color: transparent; border: 0; border-bottom: 2px solid transparent; padding: 8px 2px; color: var(--color-fg-muted); cursor: pointer; }
+.lm-tab.is-on { color: var(--color-fg); border-bottom-color: var(--color-fg); font-weight: var(--cds-font-weight-medium); }
+.lm-tab:focus-visible, .lm-row:focus-visible, .lm-btn:focus-visible, .lm-opt input:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 2px; }
+.lm-step { display: grid; gap: var(--cds-gap-sm); }
+.lm-step-title { margin: 0; font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); }
+.lm-survey { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: var(--cds-gap-sm); align-items: stretch; }
+.lm-q { padding: var(--cds-pad-md); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background-color: var(--color-panel); display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.lm-q[hidden] { display: none; }
+.lm-q-title { margin: 0 0 2px; font-weight: var(--cds-font-weight-medium); line-height: 1.35; min-height: 2.7em; }
+
+.lm-opt { display: flex; gap: 8px; align-items: flex-start; cursor: pointer; line-height: 1.35; }
+.lm-opt input { margin: 2px 0 0; accent-color: var(--color-fg); flex: none; }
+.lm-large { font-size: var(--cds-font-size-caption); max-width: 18rem; }
+.lm-recipe { border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md); background-color: var(--color-panel); }
+.lm-recipe > summary { cursor: pointer; line-height: 1.5; }
+.lm-recipe > summary .lm-sum-label { font-weight: var(--cds-font-weight-medium); }
+.lm-recipe > summary .lm-sum-list { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.lm-recipe-body { display: grid; gap: var(--cds-gap-md); margin-top: var(--cds-gap-md); }
+.lm-items { display: grid; gap: var(--cds-gap-sm); }
+.lm-item { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cds-gap-sm) var(--cds-gap-md); padding-block: 6px; border-bottom: 1px solid var(--color-border-line); }
+.lm-item-text { display: grid; gap: 2px; min-width: 0; flex: 1 1 14rem; }
+.lm-item-meta { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.lm-item .dash-select { width: 7.5rem; }
+.lm-btn { font: inherit; font-size: var(--cds-font-size-caption); color: var(--color-fg); background-color: transparent; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: 5px 10px; cursor: pointer; }
+.lm-btn:hover { border-color: var(--color-fg-muted); }
+.lm-btn-primary { background-color: var(--color-fg); color: var(--color-bg); border-color: var(--color-fg); }
+.lm-add { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); align-items: flex-end; }
+.lm-add-title { flex-basis: 100%; margin: 0; font-weight: var(--cds-font-weight-medium); }
+.lm-add .ax-field-factor .dash-select { width: 18rem; }
+.lm-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--cds-gap-lg); }
+@container (min-width: 860px) { .lm-grid { grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); } }
+.lm-profile { display: grid; gap: var(--cds-gap-md); min-height: 260px; align-content: start; }
+.lm-prof-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: var(--cds-gap-md); }
+.lm-prof-name { margin: 0; font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); }
+.lm-prof-rank { margin: 2px 0 0; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.lm-prof-score { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: 2.6rem; line-height: 1; }
+.lm-prof-score small { font-family: var(--font-anthropic-sans); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin-left: 6px; }
+.lm-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); gap: var(--cds-gap-sm) var(--cds-gap-md); margin: 0; }
+.lm-facts div { display: grid; gap: 2px; min-width: 0; }
+.lm-facts dt { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.lm-facts dd { margin: 0; font-variant-numeric: tabular-nums; font-weight: var(--cds-font-weight-medium); }
+.lm-fx-list { display: grid; gap: var(--cds-gap-md); }
+.lm-fx { display: grid; gap: 4px; }
+.lm-fx-top { display: flex; justify-content: space-between; gap: var(--cds-gap-sm); align-items: baseline; }
+.lm-fx-name { min-width: 0; }
+.lm-fx-pts { font-variant-numeric: tabular-nums; font-weight: var(--cds-font-weight-medium); white-space: nowrap; }
+.lm-fx-track { height: 8px; border-radius: 4px; background-color: var(--cds-chart-grid); overflow: hidden; }
+.lm-fx-bar { height: 100%; border-radius: 0 4px 4px 0; }
+.lm-fx-meta { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); font-variant-numeric: tabular-nums; }
+.lm-county-search { position: relative; display: grid; gap: var(--cds-gap-xs); max-width: 24rem; }
+.lm-county-search .ax-input { width: 100%; }
+.lm-county-results { position: absolute; top: 100%; left: 0; right: 0; z-index: 5; margin-top: 4px; display: grid; max-height: 18rem; overflow-y: auto; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); box-shadow: var(--cds-shadow-popover); border-radius: var(--cds-radius); }
+.lm-county-results:empty { display: none; }
+.lm-county-opt { font: inherit; color: var(--color-fg); background-color: transparent; border: 0; text-align: left; padding: 8px 10px; display: flex; justify-content: space-between; gap: var(--cds-gap-sm); cursor: pointer; }
+.lm-county-opt:hover, .lm-county-opt.is-active { background-color: color-mix(in oklab, var(--color-fg) 8%, transparent); }
+.lm-county-score { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.lm-county-none { margin: 0; padding: 8px 10px; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.lm-cell-track { height: 3px; margin-top: 4px; margin-left: auto; width: 100%; min-width: 3.5rem; border-radius: 2px; background-color: var(--cds-chart-grid); overflow: hidden; }
+.lm-cell-bar { height: 100%; }
+.lm-about-list, .lm-about-notes { margin: 0; padding-left: 1.3em; display: grid; gap: var(--cds-gap-sm); max-width: 75ch; line-height: 1.5; }
+.lm-about-notes b { font-weight: var(--cds-font-weight-medium); }
+.lm-about-table td { white-space: normal; vertical-align: top; line-height: 1.45; }
+.lm-about-table td:first-child { min-width: 13rem; }
+@container (max-width: 560px) {
+  .lm-about-table thead { display: none; }
+  .lm-about-table, .lm-about-table tbody, .lm-about-table tr, .lm-about-table td { display: block; width: auto; }
+  .lm-about-table tr { padding-block: 8px; border-bottom: 1px solid var(--color-border-line); }
+  .lm-about-table td { border: 0; padding: 2px 0; min-width: 0; white-space: normal; }
+  .lm-about-table td:first-child { font-weight: var(--cds-font-weight-medium); min-width: 0; }
+  .lm-about-table td:nth-child(2) { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+}
+@media print { .lm-tabs { display: none; } }
+</style>
+
+<div class="ax" id="explorer">
+  <header class="ax-head" id="header">
+    <h1 class="ax-title" id="title">AgeTech Launch Market Finder</h1>
+    <p class="ax-intro" id="intro">Where do you want to build your next company? Tell us a little about it, then explore how every US county scores for it, from 0 to 100.</p>
+  </header>
+
+  <div class="lm-tabs" role="tablist" aria-label="Views">
+    <button type="button" class="lm-tab is-on" role="tab" id="tab-market" aria-controls="market" aria-selected="true">Find a launch market</button>
+    <button type="button" class="lm-tab" role="tab" id="tab-explore" aria-controls="explore" aria-selected="false" tabindex="-1">Explore one metric</button>
+    <button type="button" class="lm-tab" role="tab" id="tab-about" aria-controls="about-data" aria-selected="false" tabindex="-1">About the data</button>
+  </div>
+
+  <section class="ax lm-panel" id="market" role="tabpanel" aria-labelledby="tab-market">
+    <div class="lm-step" id="survey-step">
+      <h2 class="lm-step-title" id="survey-title">Tell us about your company</h2>
+      <div class="lm-survey" id="survey">
+        <div class="lm-q" id="q-pay" role="group" aria-labelledby="q-pay-title">
+          <p class="lm-q-title" id="q-pay-title">1. Who pays for your solution?</p>
+          <label class="lm-opt"><input type="checkbox" name="pay" value="consumer" id="pay-consumer"><span>Older adults or their families</span></label>
+          <label class="lm-opt"><input type="checkbox" name="pay" value="senior_living" id="pay-senior_living"><span>Senior living communities</span></label>
+          <label class="lm-opt"><input type="checkbox" name="pay" value="home_care" id="pay-home_care"><span>Home care agencies</span></label>
+          <label class="lm-opt"><input type="checkbox" name="pay" value="medicare" id="pay-medicare"><span>Medicare</span></label>
+          <label class="lm-opt"><input type="checkbox" name="pay" value="medicaid" id="pay-medicaid"><span>Medicaid</span></label>
+        </div>
+        <div class="lm-q" id="q-aud" role="radiogroup" aria-labelledby="q-aud-title">
+          <p class="lm-q-title" id="q-aud-title">2. Who is it mainly for?</p>
+          <label class="lm-opt"><input type="radio" name="aud" value="65" id="aud-65"><span>Adults 65 and older</span></label>
+          <label class="lm-opt"><input type="radio" name="aud" value="75" id="aud-75"><span>Adults 75 and older</span></label>
+          <label class="lm-opt"><input type="radio" name="aud" value="85" id="aud-85"><span>The oldest adults, 85 and older</span></label>
+        </div>
+        <div class="lm-q" id="q-reach" role="radiogroup" aria-labelledby="q-reach-title">
+          <p class="lm-q-title" id="q-reach-title">3. How do you reach customers?</p>
+          <label class="lm-opt"><input type="radio" name="reach" value="home" id="reach-home"><span>At their homes, so you or your staff travel</span></label>
+          <label class="lm-opt"><input type="radio" name="reach" value="site" id="reach-site"><span>At a place they come to, like a clinic or center</span></label>
+          <label class="lm-opt"><input type="radio" name="reach" value="remote" id="reach-remote"><span>Remotely or by shipping</span></label>
+        </div>
+        <div class="lm-q" id="q-area" role="radiogroup" aria-labelledby="q-area-title">
+          <p class="lm-q-title" id="q-area-title">4. Where do you want to operate?</p>
+          <label class="lm-opt"><input type="radio" name="area" value="any" id="area-any"><span>Anywhere</span></label>
+          <label class="lm-opt"><input type="radio" name="area" value="metro" id="area-metro"><span>Cities and suburbs (metro counties)</span></label>
+          <label class="lm-opt"><input type="radio" name="area" value="rural" id="area-rural"><span>Rural areas and small towns (nonmetro counties)</span></label>
+        </div>
+        <div class="lm-q" id="q-medicare" role="radiogroup" aria-labelledby="q-medicare-title" hidden>
+          <p class="lm-q-title" id="q-medicare-title">5. Which Medicare pays you?</p>
+          <label class="lm-opt"><input type="radio" name="medicare" value="ma" id="medicare-ma"><span>Medicare Advantage plans</span></label>
+          <label class="lm-opt"><input type="radio" name="medicare" value="traditional" id="medicare-traditional"><span>Traditional Medicare</span></label>
+          <label class="lm-opt"><input type="radio" name="medicare" value="both" id="medicare-both"><span>Both, or not sure</span></label>
+        </div>
+      </div>
+      <details class="lm-recipe" id="recipe">
+        <summary><span class="lm-sum-label">What the score counts</span> <span class="lm-sum-list" data-draw="recipe-summary">—</span></summary>
+        <div class="lm-recipe-body">
+          <p class="ax-desc">Your answers set these factors. Each county's score is the weighted average of its percentile on each one, compared with every US county. "Less is better" flips a factor, so a county with a low value earns a high percentile. Change a weight, remove a factor, or add one from the library.</p>
+          <div data-draw="recipe" data-source="factors"></div>
+        </div>
+      </details>
+    </div>
+
+    <div class="ax-controls" id="market-filters">
+      <div class="ax-field">
+        <label for="lm-state">State</label>
+        <select id="lm-state" class="dash-select" data-draw="state-select" data-source="counties"></select>
+      </div>
+      <div class="ax-field">
+        <label for="lm-floor">Residents <span data-draw="age-label">—</span> in the county</label>
+        <select id="lm-floor" class="dash-select">
+          <option value="0">Any number</option>
+          <option value="1000">1,000 or more</option>
+          <option value="5000">5,000 or more</option>
+          <option value="25000">25,000 or more</option>
+        </select>
+      </div>
+    </div>
+
+    <p class="ax-lede" id="market-takeaway">For <span data-draw="mt-model">—</span>, the best fit<span data-draw="mt-where"></span> is <b data-draw="mt-top" data-source="market_summary" data-field="top_name" data-row="0">—</b>, with a fit score of <b data-draw="mt-score" data-source="market_summary" data-field="top_score" data-row="0">—</b>. It has <b data-draw="mt-older" data-source="market_summary" data-field="top_residents" data-row="0">—</b> residents <span data-draw="age-label">—</span>, and <b data-draw="mt-reach" data-source="market_summary" data-field="top_within30" data-row="0">—</b> live within 30 miles.</p>
+
+    <section class="ax-kpis" id="market-kpis" aria-label="Summary of the ranking">
+      <div class="ax-card ax-kpi" id="mkpi-ranked">
+        <p class="ax-kpi-label">Counties ranked</p>
+        <p class="ax-kpi-value"><span class="dash-skeleton" data-draw="mk-n" data-source="market_summary" data-field="counties_ranked" data-row="0">—</span></p>
+        <p class="ax-kpi-note">that have a score and meet your filters</p>
+      </div>
+      <div class="ax-card ax-kpi" id="mkpi-80">
+        <p class="ax-kpi-label">Counties scoring 80 or more</p>
+        <p class="ax-kpi-value"><span class="dash-skeleton" data-draw="mk-80" data-source="market_summary" data-field="counties_80plus" data-row="0">—</span></p>
+        <p class="ax-kpi-note">out of 100 on the fit score</p>
+      </div>
+      <div class="ax-card ax-kpi" id="mkpi-top25">
+        <p class="ax-kpi-label">Residents <span data-draw="age-label">—</span> in the top 25</p>
+        <p class="ax-kpi-value"><span class="dash-skeleton" data-draw="mk-top25" data-source="market_summary" data-field="top25_residents" data-row="0">—</span></p>
+        <p class="ax-kpi-note">across the 25 best-fitting counties</p>
+      </div>
+    </section>
+
+    <div class="lm-grid">
+      <section class="ax-card" id="market-map-card">
+        <div class="ax-field lm-county-search" id="county-search">
+          <label for="lm-county">Find a county</label>
+          <input id="lm-county" class="ax-input" type="search" placeholder="Start typing, e.g. Nassau" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="lm-county-results">
+          <div class="lm-county-results" id="lm-county-results" role="listbox" aria-label="Matching counties" data-draw="county-results" data-source="ranked_market"></div>
+        </div>
+        <div class="ax-card-head">
+          <h2 id="market-map-title">Fit score by county</h2>
+          <p class="ax-desc">Each county is colored by its fit score, from red for a poor fit to green for a strong fit; the legend gives each band's scores. Outlined, uncolored counties aren't ranked. Click a county to see why it scores what it does.</p>
+        </div>
+        <div class="ax-chart ax-map" data-draw="market-map" data-source="market ranked_market county_shapes"></div>
+      </section>
+      <section class="ax-card" id="profile-card">
+        <div class="ax-card-head">
+          <h2 id="profile-title">Why this county scores what it does</h2>
+          <p class="ax-desc">Points are the county's percentile on each factor, from 0 to 100. Click any county on the map or in the table, or find it by name above the map.</p>
+        </div>
+        <div class="lm-profile" data-draw="profile" data-source="market ranked_market factors"></div>
+      </section>
+    </div>
+
+    <section class="ax-card" id="market-ranking-card">
+      <div class="ax-card-head ax-card-head-row">
+        <div>
+          <h2 id="market-ranking-title">Best-fitting counties</h2>
+          <p class="ax-desc">The top 25 by fit score are shown, with each factor's value; the bar under a value shows its points. Rank is the county's place among all ranked counties. Click a row to see why it scores what it does.</p>
+        </div>
+        <label class="lm-opt lm-large" for="lm-large"><input type="checkbox" id="lm-large"><span>Only the 100 counties with the most residents <span data-draw="age-label">—</span></span></label>
+      </div>
+      <div class="ax-table-wrap">
+        <table class="ax-table" id="market-table" data-source="ranked_market" data-row-key="geoid" aria-labelledby="market-ranking-title">
+          <thead data-draw="market-head"></thead>
+          <tbody data-draw="market-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </section>
+
+  <section class="ax lm-panel" id="explore" role="tabpanel" aria-labelledby="tab-explore" hidden>
+    <p class="ax-lede" id="takeaway"><span data-draw="t-metric">—</span>: the median county is at <b data-draw="t-median" data-source="summary" data-field="median" data-row="0">—</b><span data-draw="t-unit"></span>. In the most rural counties, under 10 people per square mile, the median is <b data-draw="t-rural" data-source="bands" data-field="median_value" data-where="band_id=lt10">—</b>, <span data-draw="t-dir">—</span> <b data-draw="t-urban" data-source="bands" data-field="median_value" data-where="band_id=1000plus">—</b> in the densest counties, with 1,000 or more.</p>
+
+    <div class="ax-controls" id="controls">
+      <div class="ax-field ax-field-metric">
+        <label for="ax-metric">Metric</label>
+        <select id="ax-metric" class="dash-select" data-draw="metric-select" data-source="metric_info"></select>
+      </div>
+      <div class="ax-field">
+        <label for="ax-age">Age group</label>
+        <select id="ax-age" class="dash-select" data-draw="age-select" data-source="metric_info"></select>
+      </div>
+      <p class="ax-meta" id="metric-meta"><span data-draw="m-cat">—</span> · data year <span data-draw="m-year">—</span> · <span data-draw="m-n">—</span> counties reported for all ages</p>
+    </div>
+
+    <section class="ax-kpis" id="kpis" aria-label="Summary for the selected metric">
+      <div class="ax-card ax-kpi" id="kpi-coverage">
+        <p class="ax-kpi-label">Counties with a value</p>
+        <p class="ax-kpi-value"><span class="dash-skeleton" data-draw="k-n" data-source="summary" data-field="counties_with_data" data-row="0">—</span></p>
+        <p class="ax-kpi-note">of <span data-draw="k-total" data-source="summary" data-field="total_counties" data-row="0">—</span> counties with Census population</p>
+      </div>
+      <div class="ax-card ax-kpi" id="kpi-older">
+        <p class="ax-kpi-label">Residents 75+ in those counties</p>
+        <p class="ax-kpi-value"><span class="dash-skeleton" data-draw="k-pop" data-source="summary" data-field="pop75_millions" data-row="0">—</span> million</p>
+        <p class="ax-kpi-note">Census estimate for July 1, 2025</p>
+      </div>
+      <div class="ax-card ax-kpi" id="kpi-median">
+        <p class="ax-kpi-label">Median county</p>
+        <p class="ax-kpi-value"><span class="dash-skeleton" data-draw="k-median" data-source="summary" data-field="median" data-row="0">—</span><span class="ax-unit" data-draw="k-unit"></span></p>
+        <p class="ax-kpi-note">Middle half of counties: <span data-draw="k-p25" data-source="summary" data-field="p25" data-row="0">—</span> to <span data-draw="k-p75" data-source="summary" data-field="p75" data-row="0">—</span></p>
+      </div>
+    </section>
+
+    <section class="ax-card" id="map-card">
+      <div class="ax-card-head">
+        <h2 id="map-title">Map of <span data-draw="metric-phrase">—</span></h2>
+        <p class="ax-desc">Each county is colored by the metric, split into five groups of about equal size; the stronger the color, the higher the value. Outlined, uncolored counties have no data.</p>
+      </div>
+      <div class="ax-chart ax-map" data-draw="map" data-source="view county_shapes"></div>
+    </section>
+
+    <div class="ax-grid2">
+      <section class="ax-card" id="scatter-card">
+        <div class="ax-card-head ax-card-head-row">
+          <div>
+            <h2 id="scatter-title">How <span data-draw="metric-phrase">—</span> varies across counties</h2>
+            <p class="ax-desc">Each dot is a county, sized by residents 75+. The dashed line is the median county.</p>
+          </div>
+          <div class="ax-field">
+            <label for="ax-x">Plot against</label>
+            <select id="ax-x" class="dash-select">
+              <option value="people_per_sqmi">People per square mile</option>
+              <option value="pct_75plus">Share of residents 75+</option>
+              <option value="median_age">Median age</option>
+            </select>
+          </div>
+        </div>
+        <div class="ax-chart ax-scatter" data-draw="scatter" data-source="view summary"></div>
+      </section>
+
+      <section class="ax-card" id="bands-card">
+        <div class="ax-card-head">
+          <h2 id="bands-title">Median county by population density</h2>
+          <p class="ax-desc">People per square mile of land. Counts are counties with a value and their residents 75+.</p>
+        </div>
+        <div class="ax-chart ax-bands" data-draw="bands" data-source="bands"></div>
+      </section>
+    </div>
+
+    <section class="ax-card" id="ranking-card">
+      <div class="ax-card-head ax-card-head-row">
+        <div>
+          <h2 id="ranking-title">Counties ranked by <span data-draw="metric-phrase">—</span></h2>
+          <p class="ax-desc">The top 25 are shown. Search to find any county in the ranking.</p>
+        </div>
+        <div class="ax-table-controls">
+          <div class="ax-field">
+            <label for="ax-order">Order</label>
+            <select id="ax-order" class="dash-select">
+              <option value="desc">Highest first</option>
+              <option value="asc">Lowest first</option>
+            </select>
+          </div>
+          <div class="ax-field">
+            <label for="ax-minpop">Residents 75+</label>
+            <select id="ax-minpop" class="dash-select">
+              <option value="0">Any number</option>
+              <option value="1000">1,000 or more</option>
+              <option value="5000">5,000 or more</option>
+              <option value="25000">25,000 or more</option>
+            </select>
+          </div>
+          <div class="ax-field">
+            <label for="ax-search">Search</label>
+            <input id="ax-search" class="ax-input" type="search" placeholder="County or state, e.g. FL" autocomplete="off">
+          </div>
+        </div>
+      </div>
+      <div class="ax-table-wrap">
+        <table class="ax-table" id="ranking-table" data-source="ranked" data-row-key="geoid" aria-labelledby="ranking-title">
+          <thead>
+            <tr>
+              <th class="ax-num" data-field="rank">Rank</th>
+              <th data-field="county">County</th>
+              <th data-field="state">State</th>
+              <th class="ax-num" data-field="value">Metric value</th>
+              <th class="ax-num" data-field="pop_75plus">Residents 75+</th>
+              <th class="ax-num" data-field="pct_75plus">Share 75+</th>
+              <th class="ax-num" data-field="population">Population</th>
+              <th class="ax-num" data-field="people_per_sqmi">People per sq mi</th>
+              <th class="ax-num" data-field="land_sqmi">Land area (sq mi)</th>
+            </tr>
+          </thead>
+          <tbody data-draw="ranking-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </section>
+
+  <section class="ax lm-panel lm-about" id="about-data" role="tabpanel" aria-labelledby="tab-about" hidden>
+    <section class="ax-card" id="about-score">
+      <h2 id="about-score-title">How the fit score works</h2>
+      <ol class="lm-about-list">
+        <li>Your answers pick the factors that matter for your company and how much each one counts: low, medium or high. You can change them under "What the score counts".</li>
+        <li>For each factor, every US county gets a percentile from 0 to 100: where it stands against every other county. Where less is better, such as few annual wellness visits, the percentile is flipped.</li>
+        <li>The fit score is the weighted average of those percentiles. A county needs data on at least two-thirds of the weight to get a score.</li>
+        <li>The state, size and metro or rural choices narrow the ranking. They don't change any county's score, so a 90 means the same in every view.</li>
+      </ol>
+    </section>
+
+    <section class="ax-card" id="about-sources">
+      <h2 id="about-sources-title">Where the numbers come from</h2>
+      <div class="ax-table-wrap">
+        <table class="ax-table lm-about-table" aria-labelledby="about-sources-title">
+          <thead>
+            <tr><th>Source</th><th>Data year</th><th>What it adds</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Urban Institute, Metrics Data for the Aging Opportunity Dashboard, released November 2026</td><td>2021 to 2025, varies by metric</td><td>Income, net worth, savings, debt, poverty, health care use, long-term care quality and mortality, by age group</td></tr>
+            <tr><td>U.S. Census Bureau, county population estimates</td><td>July 1, 2025, and 2020 for growth</td><td>Residents 65+, 75+ and 85+, total population, and growth since 2020</td></tr>
+            <tr><td>U.S. Census Bureau, 2025 Gazetteer</td><td>2025</td><td>Land area and each county's location, for density and the 30-mile reach</td></tr>
+            <tr><td>U.S. Census Bureau, cartographic boundary file for counties</td><td>2024</td><td>County outlines for the maps</td></tr>
+            <tr><td>U.S. Census Bureau, County Business Patterns</td><td>2023</td><td>Senior living communities and home care businesses</td></tr>
+            <tr><td>CMS, Medicare Advantage State/County Penetration</td><td>November 2026</td><td>Share of people eligible for Medicare who are in Medicare Advantage</td></tr>
+            <tr><td>CMS, Nursing Home Provider Information</td><td>October 2026</td><td>Nursing homes, beds, star ratings and staff turnover, available under "Add a factor"</td></tr>
+            <tr><td>USDA Economic Research Service, Rural-Urban Continuum Codes</td><td>2023</td><td>Which counties are metro and which are rural or small-town, for question 4</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="ax-desc">Open Sources beside the page to see each file, how it was put together, and its rows.</p>
+    </section>
+
+    <section class="ax-card" id="about-terms">
+      <h2 id="about-terms-title">Definitions and gaps</h2>
+      <ul class="lm-about-notes">
+        <li><b>A shortlist, not an answer.</b> The fit score ranks counties against each other on the factors your answers set. It doesn't measure competition, regulation or real demand for a product, which this data doesn't cover.</li>
+        <li><b>Age groups.</b> Urban Institute doesn't report a 75+ group for most metrics, so wealth, income and health factors use the closest group it does report: ages 75–84 for 75+, 85+ for 85+, and 65+ (or 65–74 where Urban has no 65+ group) for 65+. Each factor's label names the ages used.</li>
+        <li><b>Within 30 miles.</b> Adds up every county whose Census internal point is within 30 straight-line miles of this county's. It stands in for a service area, and it is rough for very large counties, which are common in the West. Los Angeles County's internal point is far enough north that its 30-mile reach counts only itself.</li>
+        <li><b>Senior living communities and home care businesses.</b> Senior living is assisted living facilities for the elderly plus continuing care retirement communities. Home care is services for the elderly and persons with disabilities (mostly non-medical home care, with some adult day and other services) plus home health care. Both count locations with paid staff, not beds or clients, and leave out businesses Census lists statewide rather than in a county.</li>
+        <li><b>Medicare Advantage share.</b> Medicare Advantage enrollees divided by everyone eligible for Medicare in the county, at all ages. CMS left out Alaska and Connecticut this month while their county codes are updated, and blanks counties with 10 or fewer enrollees.</li>
+        <li><b>Metro and rural.</b> Question 4 uses USDA's Rural-Urban Continuum Codes. Metro counties are codes 1–3; rural and small-town counties are the nonmetro codes 4–9.</li>
+        <li><b>Medicaid.</b> Eligibility and home-care programs vary by state, and this data doesn't cover them. The poverty rate stands in for how many older adults may qualify.</li>
+        <li><b>Repeated values.</b> Many employment, wealth and debt figures repeat exactly across neighboring counties; four Colorado mountain counties share one median net worth, for example. That suggests Urban estimated those metrics for groups of counties, so treat differences between small neighboring counties with care.</li>
+        <li><b>Connecticut.</b> Appears only for Census, CMS nursing home, business and employment and wealth figures. Urban reports Connecticut's other metrics for its former eight counties, which Census no longer publishes population or area for.</li>
+        <li><b>Labels.</b> "Share employed" is labeled "NA" in Urban's file; it is the one employment metric in Urban's data dictionary with no other name in the file. Two misspelled labels are corrected: depressive symptoms and pneumococcal vaccine.</li>
+      </ul>
+    </section>
+  </section>
+</div>
+
+<script>
+dash.loader('metrics', {
+  description: 'The file stores each row as a list in column order to keep it small; this turns each list back into a row with named columns.',
+  fn: ({answer}) => {
+    const cols = answer.columns;
+    return {data: answer.rows.map((r) => Object.fromEntries(cols.map((c, i) => [c, r[i]]))), columns: cols, meta: answer.meta};
+  },
+});
+
+/* ---------- Explore one metric ---------- */
+dash.calc('view', {
+  title: 'Counties with the selected metric',
+  description: 'Each county’s Census population and land area beside its value on the metric and age group picked on the page. Shares are shown as percentages.',
+  inputs: ['counties', 'metrics', 'metric_info'],
+  fn: (counties, metrics, metric_info) => {
+    const p = dash.params();
+    const info = metric_info.find((m) => m.id === p.metric) || metric_info[0];
+    if (!info) return [];
+    const age = String(info.ages).split(', ').includes(p.age) ? p.age : 'All';
+    const byGeo = new Map();
+    for (const r of metrics) if (r.age === age) byGeo.set(r.geoid, r[info.id]);
+    const shown = (v) => (v == null ? null
+      : info.unit === 'share' ? Math.round(v * 1000) / 10
+      : info.unit === 'per1000days' ? Math.round(v * 100) / 100
+      : Math.round(v));
+    return counties.filter((c) => c.census_match).map((c) => ({
+      geoid: c.geoid, county: c.county, state: c.state,
+      population: c.population, pop_75plus: c.pop_75plus,
+      pct_75plus: c.population ? Math.round((c.pop_75plus / c.population) * 1000) / 10 : null,
+      median_age: c.median_age,
+      land_sqmi: Math.round(c.land_sqmi),
+      people_per_sqmi: c.people_per_sqmi < 10 ? c.people_per_sqmi : Math.round(c.people_per_sqmi),
+      lat: c.lat, lon: c.lon,
+      value: shown(byGeo.has(c.geoid) ? byGeo.get(c.geoid) : null),
+    }));
+  },
+});
+
+dash.calc('summary', {
+  title: 'Selected metric across counties',
+  description: 'How many counties have a value, how many residents 75+ live in them, and the median and middle half of county values.',
+  inputs: ['view', 'metric_info'],
+  fn: (view, metric_info) => {
+    const p = dash.params();
+    const info = metric_info.find((m) => m.id === p.metric) || metric_info[0] || {};
+    const digits = info.unit === 'share' ? 1 : info.unit === 'per1000days' ? 2 : 0;
+    const round = (v) => (v == null ? null : Math.round(v * 10 ** digits) / 10 ** digits);
+    const withData = view.filter((r) => r.value != null);
+    const vals = withData.map((r) => r.value).sort((a, b) => a - b);
+    const q = (f) => {
+      if (!vals.length) return null;
+      const i = (vals.length - 1) * f, lo = Math.floor(i), hi = Math.ceil(i);
+      return vals[lo] + (vals[hi] - vals[lo]) * (i - lo);
+    };
+    const pop75 = withData.reduce((s, r) => s + (r.pop_75plus || 0), 0);
+    return [{
+      counties_with_data: withData.length,
+      total_counties: view.length,
+      pop75_millions: Math.round(pop75 / 1e5) / 10,
+      median: round(q(0.5)), p25: round(q(0.25)), p75: round(q(0.75)),
+    }];
+  },
+});
+
+dash.calc('bands', {
+  title: 'Median by population density',
+  description: 'Counties grouped by people per square mile of land, with the median value of the selected metric in each group.',
+  inputs: ['view', 'metric_info'],
+  fn: (view, metric_info) => {
+    const p = dash.params();
+    const info = metric_info.find((m) => m.id === p.metric) || metric_info[0] || {};
+    const digits = info.unit === 'share' ? 1 : info.unit === 'per1000days' ? 2 : 0;
+    const groups = [
+      {band_id: 'lt10', band: 'Under 10', lo: 0, hi: 10},
+      {band_id: '10-50', band: '10 to 50', lo: 10, hi: 50},
+      {band_id: '50-250', band: '50 to 250', lo: 50, hi: 250},
+      {band_id: '250-1000', band: '250 to 1,000', lo: 250, hi: 1000},
+      {band_id: '1000plus', band: '1,000 or more', lo: 1000, hi: Number.MAX_VALUE},
+    ];
+    return groups.map((g) => {
+      const inBand = view.filter((r) => r.people_per_sqmi != null && r.people_per_sqmi >= g.lo && r.people_per_sqmi < g.hi);
+      const withData = inBand.filter((r) => r.value != null);
+      const vals = withData.map((r) => r.value).sort((a, b) => a - b);
+      let median = null;
+      if (vals.length) {
+        const i = (vals.length - 1) / 2;
+        median = Math.round(((vals[Math.floor(i)] + vals[Math.ceil(i)]) / 2) * 10 ** digits) / 10 ** digits;
+      }
+      return {
+        band_id: g.band_id, band: g.band,
+        counties: inBand.length, counties_with_data: withData.length,
+        pop_75plus: withData.reduce((s, r) => s + (r.pop_75plus || 0), 0),
+        median_value: median,
+      };
+    });
+  },
+});
+
+dash.calc('ranked', {
+  title: 'County ranking',
+  description: 'Counties with a value on the selected metric and at least the chosen number of residents 75+, ranked by that value.',
+  inputs: ['view'],
+  fn: (view) => {
+    const p = dash.params();
+    const min = Number(p.minpop) || 0;
+    const desc = p.order !== 'asc';
+    return view
+      .filter((r) => r.value != null && (r.pop_75plus || 0) >= min)
+      .sort((a, b) => (desc ? b.value - a.value : a.value - b.value))
+      .map((r, i) => ({
+        rank: i + 1, geoid: r.geoid, county: r.county, state: r.state, value: r.value,
+        pop_75plus: r.pop_75plus, pct_75plus: r.pct_75plus, population: r.population,
+        people_per_sqmi: r.people_per_sqmi, land_sqmi: r.land_sqmi,
+      }));
+  },
+});
+
+/* ---------- Find a launch market ---------- */
+dash.calc('factors', {
+  title: 'Fit score factors',
+  description: 'Every factor the fit score can use: where it comes from, its unit and data year, and the age groups it is available for. "{age}" in a label is filled in with the age group used.',
+  inputs: ['metric_info'],
+  fn: (metric_info) => {
+    const AGES = '65+, 75+, 85+';
+    const C = (id, label, unit, year, ages) => ({id, group: 'Older adults and reach (Census)', label, unit, source: 'Census', year, ages: ages || ''});
+    const B = (id, label) => ({id, group: 'Senior living and home care (Census business counts)', label, unit: label.includes('per 1,000') ? 'per1k' : 'count', source: 'Census', year: '2023', ages: ''});
+    const M = (id, label, unit) => ({id, group: 'Medicare (CMS)', label, unit, source: 'CMS', year: 'Nov 2026', ages: ''});
+    const N = (id, label, unit) => ({id, group: 'Nursing homes (CMS)', label, unit, source: 'CMS', year: 'Oct 2026', ages: ''});
+    return [
+      C('residents', 'Residents {age}', 'count', '2025', AGES),
+      C('within30', 'Residents {age} within 30 miles', 'count', '2025', AGES),
+      C('per_sqmi', 'Residents {age} per square mile', 'density', '2025', AGES),
+      C('share', 'Share of residents who are {age}', 'pct', '2025', AGES),
+      C('growth', 'Growth in residents {age} since 2020', 'pct', '2020–2025', AGES),
+      C('population', 'Total population', 'count', '2025'),
+      C('people_per_sqmi', 'People per square mile', 'density', '2025'),
+      C('median_age', 'Median age', 'years', '2025'),
+      B('senior_living', 'Senior living communities in the county'),
+      B('sl_within30', 'Senior living communities within 30 miles'),
+      B('sl_per_1k', 'Senior living communities per 1,000 residents 75+'),
+      B('home_care', 'Home care businesses in the county'),
+      B('hc_within30', 'Home care businesses within 30 miles'),
+      M('ma_pct', 'Medicare beneficiaries in Medicare Advantage', 'pct'),
+      M('medicare_eligibles', 'People eligible for Medicare', 'count'),
+      N('nh_count', 'Nursing homes in the county', 'count'),
+      N('nh_within30', 'Nursing homes within 30 miles', 'count'),
+      N('nh_beds', 'Certified nursing home beds', 'count'),
+      N('nh_low_staffing_pct', 'Homes with a 1–2 star staffing rating', 'pct'),
+      N('nh_turnover_median', 'Nursing staff turnover, median home', 'pct'),
+      N('nh_low_overall_pct', 'Homes rated 1–2 stars overall', 'pct'),
+      ...metric_info.map((m) => ({id: m.id, group: m.category + ' (Urban Institute)', label: m.label, unit: m.unit, source: 'Urban Institute', year: m.year, ages: m.ages})),
+    ];
+  },
+});
+
+dash.calc('reach', {
+  title: 'County reach, businesses and Medicare',
+  description: 'For each county: residents 65+, 75+ and 85+, senior living and home care businesses, and nursing homes in every county within 30 straight-line miles of its Census internal point; residents per square mile, their share and their growth since 2020; the Medicare Advantage share; and the USDA rural-urban code.',
+  inputs: ['counties', 'nursing_homes', 'businesses', 'medicare_advantage', 'rural_codes'],
+  fn: (counties, nursing_homes, businesses, medicare_advantage, rural_codes) => {
+    const nh = new Map(nursing_homes.map((r) => [r.geoid, r]));
+    const ru = new Map(rural_codes.map((r) => [r.geoid, r]));
+    const biz = new Map(businesses.map((r) => [r.geoid, r]));
+    const ma = new Map(medicare_advantage.map((r) => [r.geoid, r]));
+    const rows = counties.filter((c) => c.census_match);
+    const R = 3958.8, rad = Math.PI / 180, MILES = 30, dLat = MILES / 69;
+    const byLat = rows.slice().sort((a, b) => a.lat - b.lat);
+    const lats = byLat.map((c) => c.lat);
+    const start = (x) => { let lo = 0, hi = lats.length; while (lo < hi) { const m = (lo + hi) >> 1; if (lats[m] < x) lo = m + 1; else hi = m; } return lo; };
+    const ages = ['65', '75', '85'];
+    const per = (n, c) => { if (!(c.land_sqmi > 0) || n == null) return null; const v = n / c.land_sqmi; return v < 10 ? Math.round(v * 10) / 10 : Math.round(v); };
+    return rows.map((c) => {
+      const sums = {p65: 0, p75: 0, p85: 0, sl: 0, hc: 0, nh: 0};
+      for (let k = start(c.lat - dLat); k < byLat.length && byLat[k].lat <= c.lat + dLat; k++) {
+        const o = byLat[k];
+        const a = Math.sin(((o.lat - c.lat) * rad) / 2) ** 2 + Math.cos(c.lat * rad) * Math.cos(o.lat * rad) * Math.sin(((o.lon - c.lon) * rad) / 2) ** 2;
+        if (2 * R * Math.asin(Math.min(1, Math.sqrt(a))) <= MILES) {
+          sums.p65 += o.pop_65plus || 0; sums.p75 += o.pop_75plus || 0; sums.p85 += o.pop_85plus || 0;
+          const b = biz.get(o.geoid) || {};
+          sums.sl += b.senior_living || 0; sums.hc += b.home_care || 0;
+          sums.nh += (nh.get(o.geoid) || {}).nh_count || 0;
+        }
+      }
+      const h = nh.get(c.geoid) || {}, b = biz.get(c.geoid) || {}, m = ma.get(c.geoid) || {}, u = ru.get(c.geoid) || {};
+      const row = {
+        geoid: c.geoid, county: c.county, state: c.state, state_name: c.state_name, lat: c.lat, lon: c.lon,
+        population: c.population, median_age: c.median_age,
+        rucc: u.rucc == null ? null : u.rucc, metro: u.metro == null ? null : u.metro, remote: u.remote == null ? null : u.remote,
+        people_per_sqmi: c.people_per_sqmi < 10 ? c.people_per_sqmi : Math.round(c.people_per_sqmi),
+        senior_living: b.senior_living || 0, sl_within30: sums.sl,
+        sl_per_1k: c.pop_75plus ? Math.round(((b.senior_living || 0) / c.pop_75plus) * 1000 * 100) / 100 : null,
+        home_care: b.home_care || 0, hc_within30: sums.hc,
+        ma_pct: m.ma_pct == null ? null : m.ma_pct, medicare_eligibles: m.medicare_eligibles == null ? null : m.medicare_eligibles,
+        nh_count: h.nh_count || 0, nh_within30: sums.nh, nh_beds: h.nh_beds || 0,
+        nh_low_staffing_pct: h.nh_low_staffing_pct == null ? null : h.nh_low_staffing_pct,
+        nh_turnover_median: h.nh_turnover_median == null ? null : h.nh_turnover_median,
+        nh_low_overall_pct: h.nh_low_overall_pct == null ? null : h.nh_low_overall_pct,
+      };
+      ages.forEach((a) => {
+        const n = c['pop_' + a + 'plus'], then = c['pop_' + a + 'plus_2020'];
+        row['residents_' + a + 'plus'] = n;
+        row['within30_' + a + 'plus'] = sums['p' + a];
+        row['per_sqmi_' + a + 'plus'] = per(n, c);
+        row['share_' + a + 'plus'] = c.population ? Math.round((n / c.population) * 1000) / 10 : null;
+        row['growth_' + a + 'plus'] = then ? Math.round((n / then - 1) * 1000) / 10 : null;
+      });
+      return row;
+    });
+  },
+});
+
+dash.calc('market', {
+  title: 'Fit score by county',
+  description: 'Each county’s percentile against all US counties on every factor in the mix your answers set, and the weighted average of those percentiles as a 0–100 fit score. A county needs data on at least two-thirds of the weight to get a score.',
+  inputs: ['factors', 'reach', 'metrics'],
+  fn: (factors, reach, metrics) => {
+    const p = dash.params();
+    const aud = ['65', '75', '85'].includes(String(p.aud)) ? String(p.aud) : '75';
+    // The mix is "factor[@age][~low]:weight" items separated by commas; ~low means less is better.
+    const items = String(p.mix || '').split(',').map((s) => {
+      const m = s.trim().match(/^([a-z0-9_]+)(?:@([0-9+-]+))?(~low)?:([0-3])$/);
+      return m ? {id: m[1], age: m[2] || 'All', low: Boolean(m[3]), weight: Number(m[4])} : null;
+    }).filter((it) => it && it.weight > 0);
+    const byId = new Map(factors.map((f) => [f.id, f]));
+    const used = items.filter((it) => byId.has(it.id));
+    // Urban's closest reported age group to the audience age.
+    const urbanAge = (f) => {
+      const have = String(f.ages).split(', ');
+      const want = aud === '65' ? ['65+', '65-74'] : aud === '75' ? ['75-84'] : ['85+'];
+      return want.find((a) => have.includes(a)) || 'All';
+    };
+    const nwAge = byId.has('median_net_worth') ? urbanAge(byId.get('median_net_worth')) : 'All';
+    const ages = new Set([nwAge, ...used.map((it) => it.age)]);
+    const urban = new Map();
+    for (const r of metrics) if (ages.has(r.age)) urban.set(r.geoid + '|' + r.age, r);
+    const shown = (v, unit) => (v == null ? null : unit === 'share' ? Math.round(v * 1000) / 10 : unit === 'per1000days' ? Math.round(v * 100) / 100 : Math.round(v));
+    const key = (it) => it.id + (it.age !== 'All' ? '_' + it.age.replace('+', 'plus').replace(/[^0-9a-z]/gi, '_') : '');
+    const valueOf = (it, c) => {
+      const f = byId.get(it.id);
+      if (f.source === 'Urban Institute') {
+        const r = urban.get(c.geoid + '|' + it.age);
+        return r && r[it.id] != null ? shown(r[it.id], f.unit) : null;
+      }
+      const field = f.ages ? `${it.id}_${it.age.replace('+', '')}plus` : it.id;
+      return c[field] == null ? null : c[field];
+    };
+    const pctFns = used.map((it) => {
+      const sorted = reach.map((c) => valueOf(it, c)).filter((v) => v != null).sort((a, b) => a - b);
+      const n = sorted.length;
+      const bound = (v, strict) => { let lo = 0, hi = n; while (lo < hi) { const m = (lo + hi) >> 1; if (strict ? sorted[m] < v : sorted[m] <= v) lo = m + 1; else hi = m; } return lo; };
+      return (v) => {
+        if (v == null || n < 2) return null;
+        const q = (((bound(v, true) + bound(v, false) - 1) / 2) / (n - 1)) * 100;
+        return it.low ? 100 - q : q;
+      };
+    });
+    const total = used.reduce((s, it) => s + it.weight, 0);
+    return reach.map((c) => {
+      const nw = urban.get(c.geoid + '|' + nwAge);
+      const row = {
+        geoid: c.geoid, county: c.county, state: c.state, state_name: c.state_name, lat: c.lat, lon: c.lon,
+        population: c.population, rucc: c.rucc, metro: c.metro, remote: c.remote,
+        residents: c['residents_' + aud + 'plus'], within30: c['within30_' + aud + 'plus'],
+        per_sqmi: c['per_sqmi_' + aud + 'plus'], growth: c['growth_' + aud + 'plus'],
+        median_net_worth: nw && nw.median_net_worth != null ? Math.round(nw.median_net_worth) : null,
+      };
+      let sum = 0, wsum = 0;
+      used.forEach((it, j) => {
+        const v = valueOf(it, c);
+        const q = pctFns[j](v);
+        row['v_' + key(it)] = v;
+        row['p_' + key(it)] = q == null ? null : Math.round(q);
+        if (q != null) { sum += q * it.weight; wsum += it.weight; }
+      });
+      row.score = total > 0 && wsum >= (2 / 3) * total ? Math.round(sum / wsum) : null;
+      return row;
+    });
+  },
+});
+
+dash.calc('ranked_market', {
+  title: 'Best-fitting counties',
+  description: 'Counties with a fit score that meet the state, minimum-residents and metro/rural filters (USDA codes 1–3 metro, 4–9 nonmetro), ranked from best fit down, with each factor’s value and points; ties go to the county with more older adults within 30 miles.',
+  inputs: ['market'],
+  fn: (market) => {
+    const p = dash.params();
+    const min = Number(p.mfloor) || 0;
+    const st = p.state || '';
+    const area = p.area || 'any';
+    const inArea = (r) => (area === 'metro' ? r.metro === true : area === 'rural' ? r.metro === false : true);
+    return market
+      .filter((r) => r.score != null && (r.residents || 0) >= min && (!st || r.state === st) && inArea(r))
+      .sort((a, b) => b.score - a.score || b.within30 - a.within30)
+      .map((r, i) => {
+        const row = {rank: i + 1};
+        Object.keys(r).forEach((k) => { if (!['lat', 'lon', 'state_name'].includes(k)) row[k] = r[k]; });
+        return row;
+      });
+  },
+});
+
+dash.calc('market_summary', {
+  title: 'Ranking summary',
+  description: 'The best-fitting county, how many counties are ranked and score 80 or more, and residents in the chosen age group across the top 25.',
+  inputs: ['ranked_market'],
+  fn: (ranked_market) => {
+    const top = ranked_market[0];
+    return [{
+      counties_ranked: ranked_market.length,
+      counties_80plus: ranked_market.filter((r) => r.score >= 80).length,
+      top25_residents: ranked_market.slice(0, 25).reduce((s, r) => s + (r.residents || 0), 0),
+      top_geoid: top ? top.geoid : null,
+      top_name: top ? `${top.county}, ${top.state}` : null,
+      top_score: top ? top.score : null,
+      top_residents: top ? top.residents : null,
+      top_within30: top ? top.within30 : null,
+    }];
+  },
+});
+
+/* ---------- Shared helpers ---------- */
+window.AX = (() => {
+  const AGE_LABEL = {'All': 'All ages', '50-64': 'Ages 50–64', '65+': 'Ages 65+', '65-74': 'Ages 65–74', '75-84': 'Ages 75–84', '75+': 'Ages 75+', '85+': 'Ages 85+'};
+  const UNIT = {usd: '', share: '', pct: '', count: '', density: '', years: '', per1k: '', per100k: ' per 100,000 people', per100k_benef: ' per 100,000 beneficiaries', per1000days: ' per 1,000 residence days'};
+  const WEIGHT = ['Off', 'Low', 'Medium', 'High'];
+  const PAYERS = {
+    consumer: 'older adults or their families', senior_living: 'senior living communities', home_care: 'home care agencies',
+    medicare: 'Medicare', medicaid: 'Medicaid',
+  };
+  const num = d3.format(',');
+  const info = () => {
+    const m = dash.data('metric_info');
+    if (m.status !== 'ok' || !m.data.length) return null;
+    const id = dash.params().metric;
+    return m.data.find((r) => r.id === id) || m.data[0];
+  };
+  const ages = (i) => (i ? String(i.ages).split(', ') : ['All']);
+  const age = (i) => { const a = dash.params().age; return ages(i).includes(a) ? a : 'All'; };
+  const ageLabel = (a) => AGE_LABEL[a] || a;
+  const unitText = (i) => (i ? UNIT[i.unit] || '' : '');
+  const lc = (s) => (/^[A-Z]{2}/.test(s) ? s : s.charAt(0).toLowerCase() + s.slice(1));
+  const fmt = (v, i) => {
+    if (v == null || !Number.isFinite(v)) return 'no data';
+    const u = i && i.unit;
+    if (u === 'usd') return '$' + num(Math.round(v));
+    if (u === 'share' || u === 'pct') return d3.format('.1f')(v) + '%';
+    if (u === 'per1000days' || u === 'per1k') return d3.format('.2f')(v);
+    if (u === 'density') return v < 10 ? d3.format('.1f')(v) : num(Math.round(v));
+    if (u === 'years') return d3.format('.1f')(v);
+    return num(Math.round(v));
+  };
+  const tick = (v, i) => {
+    const u = i && i.unit;
+    if (u === 'usd') return '$' + d3.format('~s')(v);
+    if (u === 'share') return d3.format('~g')(v) + '%';
+    return d3.format(',~g')(v);
+  };
+  const density = (v) => (v == null ? '' : v < 10 ? d3.format('.1f')(v) : num(v));
+  const pctText = (v) => (v == null ? '' : v.toFixed(1) + '%');
+  const c0 = () => (dash.colors && dash.colors[0]) || 'var(--color-fg)';
+  const STEPS = [32, 48, 64, 82, 100];
+  const seq = (k) => `color-mix(in oklab, ${c0()} ${STEPS[k]}%, var(--color-panel))`;
+  const mark = (tag, text, source, field, where) => {
+    const e = document.createElement(tag);
+    e.textContent = text;
+    if (source) { e.dataset.source = source; e.dataset.field = field; if (where) e.dataset.where = where; }
+    return e;
+  };
+  const empty = (el, status) => {
+    if (status === 'error') {
+      const p = document.createElement('p');
+      p.className = 'ax-error';
+      p.textContent = 'This part couldn’t load its data. Reload the page to try again.';
+      el.replaceChildren(p);
+    } else {
+      el.replaceChildren('—');
+    }
+  };
+  const statusOf = (...ds) => (ds.some((d) => d.status === 'error') ? 'error' : ds.every((d) => d.status === 'ok') ? 'ok' : 'loading');
+
+  // Tooltip: lines are [label, text, source, field, where, suffix].
+  const showTip = (tip, box, title, lines, x, y) => {
+    const head = document.createElement('strong');
+    head.textContent = title;
+    tip.replaceChildren(head, ...lines.map(([label, text, source, field, where, suffix]) => {
+      const d = document.createElement('div');
+      d.className = 'ax-tip-row';
+      const b = document.createElement('b');
+      b.append(mark('span', text, source, field, where));
+      d.append(label + ' ', b);
+      if (suffix) d.append(suffix);
+      return d;
+    }));
+    tip.hidden = false;
+    const tw = tip.offsetWidth, th = tip.offsetHeight, bw = box.clientWidth, bh = box.clientHeight;
+    let left = x + 14;
+    if (left + tw > bw) left = Math.max(0, x - tw - 14);
+    const top = Math.min(Math.max(0, y - th / 2), Math.max(0, bh - th));
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+  };
+
+  // Hover tooltip and optional click on the nearest dot.
+  const interact = ({svg, P, box, w, title, lines, pick}) => {
+    if (!P.length) return;
+    const tip = document.createElement('div');
+    tip.className = 'ax-tip';
+    tip.hidden = true;
+    box.append(tip);
+    const ring = svg.append('circle').style('fill', 'none').style('stroke', 'var(--color-fg)').style('stroke-width', 1.5).style('display', 'none').style('pointer-events', 'none');
+    const delaunay = d3.Delaunay.from(P, (p) => p.x, (p) => p.y);
+    const node = svg.node();
+    const near = (e) => {
+      const [mx, my] = d3.pointer(e, node);
+      const p = P[delaunay.find(mx, my)];
+      return p && Math.hypot(p.x - mx, p.y - my) <= Math.max(14, p.rad + 6) ? p : null;
+    };
+    const hide = () => { tip.hidden = true; ring.style('display', 'none'); };
+    const show = (e) => {
+      const p = near(e);
+      if (!p) { hide(); return; }
+      ring.attr('cx', p.x).attr('cy', p.y).attr('r', p.rad + 2).style('display', null);
+      const s = node.clientWidth / w || 1;
+      showTip(tip, box, title(p.r), lines(p.r), p.x * s, p.y * s);
+    };
+    svg.on('pointermove', show).on('pointerdown', show).on('pointerleave', hide);
+    if (pick) svg.style('cursor', 'pointer').on('click', (e) => { const p = near(e); if (p) pick(p.r); });
+  };
+
+  // County outlines from the shapes dataset, kept by county ID.
+  let shapeCache = {src: null, map: null};
+  const shapesById = () => {
+    const d = dash.data('county_shapes');
+    if (d.status !== 'ok' || !d.data) return null;
+    // Nested values can arrive as JSON text, so outlines are read back into lists here.
+    const coords = (c) => { if (typeof c !== 'string') return c; try { return JSON.parse(c); } catch (e) { return null; } };
+    if (shapeCache.src !== d.data) shapeCache = {src: d.data, map: new Map(d.data.map((r) => [String(r.geoid), coords(r.coords)]).filter(([, c]) => Array.isArray(c) && c.length))};
+    return shapeCache.map;
+  };
+  // County shape map: o = {shapes, rows, fill(r) -> color or null, legend: [[color, text]], aria, title, lines, pick, selected}.
+  const shapeMap = (el, o) => {
+    const w = Math.max(280, el.clientWidth || 600);
+    const feats = o.rows.map((r) => {
+      const c = o.shapes.get(r.geoid);
+      return c ? {type: 'Feature', r, fill: o.fill(r), geometry: {type: 'MultiPolygon', coordinates: c}} : null;
+    }).filter(Boolean);
+    if (!feats.length) { el.replaceChildren(mark('p', 'No counties to show for these filters.')); return; }
+    const fc = {type: 'FeatureCollection', features: feats};
+    // The map's height follows the shape of what is drawn (the country, or one state).
+    const b = d3.geoPath(d3.geoAlbersUsa().fitWidth(w - 12, fc)).bounds(fc);
+    const h = Math.max(220, Math.min(Math.round(w * 0.75), Math.ceil(b[1][1] - b[0][1]) + 12));
+    const path = d3.geoPath(d3.geoAlbersUsa().fitExtent([[6, 6], [w - 6, h - 6]], fc));
+    const legend = document.createElement('div');
+    legend.className = 'ax-legend';
+    o.legend.forEach(([fill, text]) => {
+      const sp = document.createElement('span');
+      const d = document.createElement('i');
+      d.className = 'ax-sw' + (fill === 'empty' ? ' ax-sw-empty' : '');
+      if (fill !== 'empty') d.style.background = fill;
+      sp.append(d, text);
+      legend.append(sp);
+    });
+    const box = document.createElement('div');
+    box.className = 'ax-plot';
+    const svg = d3.create('svg').attr('viewBox', `0 0 ${w} ${h}`).attr('role', 'img').attr('aria-label', o.aria);
+    box.append(svg.node());
+    el.replaceChildren(legend, box);
+    const g = svg.append('g');
+    const thin = feats.length > 400 ? 0.3 : 0.8;
+    g.selectAll('path').data(feats).join('path')
+      .attr('d', path)
+      .style('fill', (f) => f.fill || 'var(--color-panel)')
+      .style('stroke', (f) => (f.fill ? 'var(--color-panel)' : 'var(--color-border-line)'))
+      .style('stroke-width', (f) => (f.fill ? thin : thin + 0.3));
+    const sel = o.selected && feats.find((f) => f.r.geoid === o.selected);
+    if (sel) svg.append('path').attr('d', path(sel)).style('fill', 'none').style('stroke', 'var(--color-fg)').style('stroke-width', 2).style('pointer-events', 'none');
+    const hover = svg.append('path').style('fill', 'none').style('stroke', 'var(--color-fg)').style('stroke-width', 1.2).style('pointer-events', 'none').style('display', 'none');
+    const tip = document.createElement('div');
+    tip.className = 'ax-tip';
+    tip.hidden = true;
+    box.append(tip);
+    const at = (e) => (e.target && e.target.parentNode === g.node() ? d3.select(e.target).datum() : null);
+    const hide = () => { tip.hidden = true; hover.style('display', 'none'); };
+    const show = (e) => {
+      const f = at(e);
+      if (!f) { hide(); return; }
+      hover.attr('d', path(f)).style('display', null);
+      const [x, y] = d3.pointer(e, box);
+      showTip(tip, box, o.title(f.r), o.lines(f.r), x, y);
+    };
+    g.on('pointermove', show).on('pointerdown', show).on('pointerleave', hide);
+    if (o.pick) g.style('cursor', 'pointer').on('click', (e) => { const f = at(e); if (f) o.pick(f.r); });
+  };
+
+  // The fit-score mix and the survey that sets it.
+  const parseMix = (s) => String(s || '').split(',').map((x) => {
+    const m = x.trim().match(/^([a-z0-9_]+)(?:@([0-9+-]+))?(~low)?:([0-3])$/);
+    return m ? {id: m[1], age: m[2] || 'All', low: Boolean(m[3]), weight: Number(m[4])} : null;
+  }).filter(Boolean);
+  const mixString = (items) => items.map((it) => `${it.id}${it.age !== 'All' ? '@' + it.age : ''}${it.low ? '~low' : ''}:${it.weight}`).join(',');
+  const mixItems = () => parseMix(dash.params().mix);
+  const mixKey = (it) => it.id + (it.age !== 'All' ? '_' + it.age.replace('+', 'plus').replace(/[^0-9a-z]/gi, '_') : '');
+  const aud = () => (['65', '75', '85'].includes(String(dash.params().aud)) ? String(dash.params().aud) : '75');
+  const answers = () => {
+    const p = dash.params();
+    return {
+      pay: Array.isArray(p.pay) ? p.pay.filter((x) => PAYERS[x]) : [],
+      aud: aud(),
+      reach: ['home', 'site', 'remote'].includes(p.reach) ? p.reach : 'home',
+      medicare: ['ma', 'traditional', 'both'].includes(p.medicare) ? p.medicare : 'both',
+      area: ['any', 'metro', 'rural'].includes(p.area) ? p.area : 'any',
+    };
+  };
+  // Urban's closest reported age group, as in the fit score calc; without the factor list, the usual groups.
+  const urbanAge = (id, a) => {
+    const fc = dash.data('factors');
+    const f = fc.status === 'ok' ? fc.data.find((x) => x.id === id) : null;
+    const want = a === '65' ? ['65+', '65-74'] : a === '75' ? ['75-84'] : ['85+'];
+    if (!f) return want[want.length - 1];
+    const have = String(f.ages).split(', ');
+    return want.find((x) => have.includes(x)) || 'All';
+  };
+  const surveyMix = (ans) => {
+    const items = [];
+    const add = (id, age, weight, low) => {
+      const it = items.find((x) => x.id === id && x.age === age && x.low === Boolean(low));
+      if (it) it.weight = Math.min(3, it.weight + weight); else items.push({id, age, low: Boolean(low), weight});
+    };
+    const a = ans.aud, cen = a + '+';
+    const pay = new Set(ans.pay);
+    if (pay.has('consumer')) { add('median_net_worth', urbanAge('median_net_worth', a), 2); add('median_income', urbanAge('median_income', a), 1); }
+    if (pay.has('senior_living')) { add('sl_within30', 'All', 3); add('senior_living', 'All', 1); }
+    if (pay.has('home_care')) { add('hc_within30', 'All', 3); add('home_care', 'All', 1); }
+    if (pay.has('medicare')) {
+      add('avoidable_hospitalizations', urbanAge('avoidable_hospitalizations', a), 3);
+      add('annual_wellness_visit', urbanAge('annual_wellness_visit', a), 2, true);
+      if (ans.medicare === 'ma') add('ma_pct', 'All', 3);
+      if (ans.medicare === 'traditional') add('ma_pct', 'All', 2, true);
+    }
+    if (pay.has('medicaid')) add('poverty_rate', urbanAge('poverty_rate', a), 3);
+    add('residents', cen, 2);
+    if (ans.reach === 'home') { add('within30', cen, 3); add('per_sqmi', cen, 3); }
+    if (ans.reach === 'site') add('within30', cen, 3);
+    return mixString(items);
+  };
+  const changed = () => mixString(mixItems()) !== mixString(parseMix(surveyMix(answers())));
+  const factorName = (f, it) => (f.label.includes('{age}') ? f.label.replace('{age}', it.age)
+    : f.label + (it.age !== 'All' ? ', ' + ageLabel(it.age).toLowerCase() : ''));
+  const selectedGeoid = (ranked) => {
+    const g = dash.params().county;
+    if (g && ranked.some((r) => r.geoid === g)) return g;
+    return ranked[0] ? ranked[0].geoid : null;
+  };
+  const marketLines = (r, src) => {
+    const w = 'geoid=' + r.geoid, a = aud() + '+';
+    return [
+      ['Fit score:', r.score == null ? 'no score' : String(r.score), src, 'score', w],
+      [`Residents ${a}:`, num(r.residents), src, 'residents', w],
+      [`${a} within 30 miles:`, num(r.within30), src, 'within30', w],
+      [`${a} per sq mi:`, density(r.per_sqmi), src, 'per_sqmi', w],
+    ];
+  };
+  return {
+    WEIGHT, PAYERS, UNIT, info, ages, age, ageLabel, unitText, lc, fmt, tick, density, pctText, num, c0, seq, mark, empty, statusOf,
+    showTip, interact, shapesById, shapeMap, parseMix, mixString, mixItems, mixKey, aud, answers, urbanAge, surveyMix, changed, factorName,
+    selectedGeoid, marketLines, search: '', mlarge: false,
+  };
+})();
+</script>
+
+<script>
+/* ---------- Tabs ---------- */
+(() => {
+  const show = (id, link) => {
+    document.querySelectorAll('.lm-panel').forEach((s) => { s.hidden = s.id !== id; });
+    document.querySelectorAll('.lm-tab').forEach((t) => {
+      const on = t.getAttribute('aria-controls') === id;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.classList.toggle('is-on', on);
+      t.tabIndex = on ? 0 : -1;
+    });
+    if (link) dash.setLink(id);
+  };
+  document.querySelectorAll('.lm-tab').forEach((t) => t.addEventListener('click', () => show(t.getAttribute('aria-controls'), true)));
+  const startTab = ['explore', 'about-data'].find((id) => location.hash === '#' + id);
+  if (startTab) show(startTab, false);
+  window.addEventListener('beforeprint', () => { document.querySelectorAll('.lm-panel').forEach((s) => { s.hidden = false; }); });
+  window.addEventListener('afterprint', () => {
+    const on = document.querySelector('.lm-tab[aria-selected="true"]');
+    show(on ? on.getAttribute('aria-controls') : 'market', false);
+  });
+})();
+
+/* ---------- Survey ---------- */
+(() => {
+  const read = () => {
+    const ans = AX.answers();
+    const pay = [];
+    document.querySelectorAll('#survey input[name="pay"]').forEach((i) => { if (i.checked) pay.push(i.value); });
+    const pick = (name, fallback) => { const i = document.querySelector(`#survey input[name="${name}"]:checked`); return i ? i.value : fallback; };
+    return {pay, aud: pick('aud', ans.aud), reach: pick('reach', ans.reach), medicare: pick('medicare', ans.medicare), area: pick('area', ans.area)};
+  };
+  document.querySelectorAll('#survey input').forEach((i) => {
+    i.addEventListener('change', () => {
+      const ans = read();
+      dash.setParams({pay: ans.pay, aud: ans.aud, reach: ans.reach, medicare: ans.medicare, area: ans.area, mix: AX.surveyMix(ans), county: ''});
+    });
+  });
+  dash.onData(() => {
+    const ans = AX.answers();
+    document.querySelectorAll('#survey input').forEach((i) => {
+      i.checked = i.name === 'pay' ? ans.pay.includes(i.value) : ans[i.name] === i.value;
+    });
+    document.querySelectorAll('#q-medicare').forEach((q) => { q.hidden = !ans.pay.includes('medicare'); });
+  });
+})();
+
+/* ---------- Launch market: controls ---------- */
+document.querySelectorAll('#lm-floor').forEach((s) => {
+  s.value = String(dash.params().mfloor ?? 1000);
+  s.addEventListener('change', () => dash.setParams({mfloor: Number(s.value)}));
+});
+document.querySelectorAll('#lm-large').forEach((box) => {
+  box.addEventListener('change', () => { window.AX.mlarge = box.checked; dash.draw('market-body'); });
+});
+dash.draw('age-label', (el) => { el.textContent = AX.aud() + '+'; });
+
+dash.draw('state-select', (sel) => {
+  const c = dash.data('counties');
+  if (c.status !== 'ok') { sel.replaceChildren(); return; }
+  const states = Array.from(new Map(c.data.filter((r) => r.census_match).map((r) => [r.state, r.state_name])).entries())
+    .sort((a, b) => String(a[1]).localeCompare(String(b[1])));
+  sel.replaceChildren(new Option('All states', ''), ...states.map(([st, name]) => new Option(name, st)));
+  sel.value = dash.params().state || '';
+  sel.onchange = () => dash.setParams({state: sel.value});
+});
+
+dash.draw('recipe-summary', (el) => {
+  const fc = dash.data('factors');
+  if (fc.status !== 'ok') { el.textContent = '—'; return; }
+  const byId = new Map(fc.data.map((f) => [f.id, f]));
+  const parts = AX.mixItems().filter((it) => it.weight > 0 && byId.has(it.id)).sort((a, b) => b.weight - a.weight)
+    .map((it) => `${AX.factorName(byId.get(it.id), it)}${it.low ? ' (less is better)' : ''}, ${AX.WEIGHT[it.weight].toLowerCase()}`);
+  el.textContent = parts.length ? parts.join(' · ') : 'nothing yet. Answer the questions above or add a factor.';
+});
+
+dash.draw('recipe', {
+  mount: (el) => {
+    const list = document.createElement('div');
+    list.className = 'lm-items';
+    const add = document.createElement('div');
+    add.className = 'lm-add';
+    el.replaceChildren(list, add);
+    return {list, add, built: false};
+  },
+  update: (el, made) => {
+    const fc = dash.data('factors');
+    if (fc.status !== 'ok') { AX.empty(made.list, fc.status); return; }
+    const byId = new Map(fc.data.map((f) => [f.id, f]));
+    const items = AX.mixItems().filter((it) => byId.has(it.id));
+    const save = (next) => dash.setParams({mix: AX.mixString(next)});
+    made.list.replaceChildren(...items.map((it, idx) => {
+      const f = byId.get(it.id);
+      const row = document.createElement('div');
+      row.className = 'lm-item';
+      const text = document.createElement('div');
+      text.className = 'lm-item-text';
+      const name = AX.mark('span', AX.factorName(f, it), 'factors', 'label', 'id=' + f.id);
+      const meta = document.createElement('span');
+      meta.className = 'lm-item-meta';
+      meta.textContent = `${it.low ? 'Less is better' : 'More is better'} · ${f.source}, ${String(f.year).replace('-', '–')}${AX.UNIT[f.unit] ? ' ·' + AX.UNIT[f.unit] : ''}`;
+      text.append(name, meta);
+      const sel = document.createElement('select');
+      sel.className = 'dash-select';
+      sel.id = 'lm-w-' + AX.mixKey(it) + (it.low ? '-low' : '');
+      sel.setAttribute('aria-label', 'Weight for ' + AX.factorName(f, it));
+      AX.WEIGHT.forEach((label, w) => sel.append(new Option(label, String(w))));
+      sel.value = String(it.weight);
+      sel.onchange = () => save(items.map((x, j) => (j === idx ? {...x, weight: Number(sel.value)} : x)));
+      const rm = document.createElement('button');
+      rm.type = 'button';
+      rm.className = 'lm-btn';
+      rm.textContent = 'Remove';
+      rm.setAttribute('aria-label', 'Remove ' + AX.factorName(f, it));
+      rm.onclick = () => save(items.filter((x, j) => j !== idx));
+      row.append(text, sel, rm);
+      return row;
+    }));
+    if (!items.length) made.list.replaceChildren(AX.mark('p', 'No factors yet. Answer the questions above, or add one below.'));
+
+    if (made.built) return;
+    made.built = true;
+    const field = (labelText, id, control, cls) => {
+      const d = document.createElement('div');
+      d.className = 'ax-field' + (cls ? ' ' + cls : '');
+      const l = document.createElement('label');
+      l.htmlFor = id;
+      l.textContent = labelText;
+      control.id = id;
+      d.append(l, control);
+      return d;
+    };
+    const title = document.createElement('p');
+    title.className = 'lm-add-title';
+    title.textContent = 'Add a factor';
+    const fsel = document.createElement('select');
+    fsel.className = 'dash-select';
+    fsel.append(new Option('Choose a factor', ''));
+    d3.groups(fc.data, (f) => f.group).forEach(([g, fs]) => {
+      const og = document.createElement('optgroup');
+      og.label = g;
+      fs.forEach((f) => og.append(new Option(f.label.replace('{age}', '(by age)'), f.id)));
+      fsel.append(og);
+    });
+    const asel = document.createElement('select');
+    asel.className = 'dash-select';
+    const dsel = document.createElement('select');
+    dsel.className = 'dash-select';
+    dsel.append(new Option('More is better', 'high'), new Option('Less is better', 'low'));
+    const wsel = document.createElement('select');
+    wsel.className = 'dash-select';
+    AX.WEIGHT.slice(1).forEach((label, k) => wsel.append(new Option(label, String(k + 1))));
+    wsel.value = '2';
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'lm-btn lm-btn-primary';
+    btn.textContent = 'Add';
+    const ageField = field('Age group', 'lm-add-age', asel);
+    const setAges = () => {
+      const f = byId.get(fsel.value);
+      const list = f && f.ages ? String(f.ages).split(', ') : [];
+      asel.replaceChildren(...list.map((a) => new Option(AX.ageLabel(a), a)));
+      if (f && f.ages) {
+        const a = AX.aud();
+        const pref = f.source === 'Urban Institute' ? AX.urbanAge(f.id, a) : a + '+';
+        if (list.includes(pref)) asel.value = pref;
+      }
+      ageField.hidden = list.length < 2;
+      btn.disabled = !f;
+    };
+    fsel.onchange = setAges;
+    btn.onclick = () => {
+      const f = byId.get(fsel.value);
+      if (!f) return;
+      const it = {id: f.id, age: f.ages && asel.value ? asel.value : 'All', low: dsel.value === 'low', weight: Number(wsel.value)};
+      const cur = AX.mixItems().filter((x) => byId.has(x.id));
+      const at = cur.findIndex((x) => x.id === it.id && x.age === it.age);
+      if (at >= 0) cur[at] = it; else cur.push(it);
+      save(cur);
+      fsel.value = '';
+      setAges();
+    };
+    made.add.replaceChildren(title, field('Factor', 'lm-add-factor', fsel, 'ax-field-factor'), ageField, field('Counts as', 'lm-add-dir', dsel), field('Weight', 'lm-add-weight', wsel), btn);
+    setAges();
+  },
+});
+
+/* ---------- County search above the map ---------- */
+// Typed text and the open list live here; the list itself is the "county-results" drawing.
+Object.assign(window.AX, {cq: '', cqOpen: false, cqActive: 0, cqMatches: []});
+dash.draw('county-results', (box) => {
+  const rk = dash.data('ranked_market');
+  const q = (AX.cq || '').trim().toLowerCase();
+  if (!AX.cqOpen || !q || rk.status !== 'ok' || !rk.data) { AX.cqMatches = []; box.replaceChildren(); return; }
+  const name = (r) => `${r.county}, ${r.state}`;
+  const starts = [], has = [];
+  for (const r of rk.data) {
+    const n = name(r).toLowerCase();
+    if (n.startsWith(q)) starts.push(r); else if (n.includes(q)) has.push(r);
+    if (starts.length >= 8) break;
+  }
+  const list = [...starts, ...has].slice(0, 8);
+  AX.cqMatches = list;
+  if (!list.length) {
+    const none = document.createElement('p');
+    none.className = 'lm-county-none';
+    none.textContent = 'No ranked county matches. Check the spelling, pick all states, or lower the minimum number of residents.';
+    box.replaceChildren(none);
+    return;
+  }
+  if (AX.cqActive >= list.length) AX.cqActive = 0;
+  box.replaceChildren(...list.map((r, k) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.id = 'lm-county-opt-' + k;
+    b.className = 'lm-county-opt' + (k === AX.cqActive ? ' is-active' : '');
+    b.setAttribute('role', 'option');
+    b.setAttribute('aria-selected', k === AX.cqActive ? 'true' : 'false');
+    const n = document.createElement('span');
+    n.textContent = name(r);
+    const sc = document.createElement('span');
+    sc.className = 'lm-county-score';
+    sc.append('Fit ', AX.mark('span', String(r.score), 'ranked_market', 'score', 'geoid=' + r.geoid));
+    b.append(n, sc);
+    b.onmousedown = (e) => e.preventDefault();
+    b.onclick = () => AX.pickCounty(r);
+    return b;
+  }));
+});
+(() => {
+  const inputs = () => document.querySelectorAll('#lm-county');
+  const setOpen = (open) => {
+    AX.cqOpen = open;
+    inputs().forEach((i) => i.setAttribute('aria-expanded', open && AX.cq.trim() ? 'true' : 'false'));
+    dash.draw('county-results');
+  };
+  AX.pickCounty = (r) => {
+    inputs().forEach((i) => { i.value = `${r.county}, ${r.state}`; });
+    AX.cq = '';
+    setOpen(false);
+    dash.setParams({county: r.geoid});
+  };
+  inputs().forEach((inp) => {
+    inp.addEventListener('input', () => { AX.cq = inp.value; AX.cqActive = 0; setOpen(true); });
+    inp.addEventListener('blur', () => setOpen(false));
+    inp.addEventListener('keydown', (e) => {
+      const n = AX.cqMatches.length;
+      if (e.key === 'Escape') { e.preventDefault(); setOpen(false); inp.blur(); }
+      else if (e.key === 'ArrowDown' && n) { e.preventDefault(); AX.cqOpen = true; AX.cqActive = (AX.cqActive + 1) % n; setOpen(true); }
+      else if (e.key === 'ArrowUp' && n) { e.preventDefault(); AX.cqActive = (AX.cqActive - 1 + n) % n; setOpen(true); }
+      else if (e.key === 'Enter') { e.preventDefault(); if (AX.cqOpen && n) AX.pickCounty(AX.cqMatches[AX.cqActive] || AX.cqMatches[0]); }
+    });
+  });
+})();
+
+/* ---------- Launch market: takeaway and tiles ---------- */
+const REACH_PHRASE = {home: 'at home', site: 'at a place they come to', remote: 'remotely'};
+const AREA_PHRASE = {any: '', metro: ' in metro counties', rural: ' in rural and small-town counties'};
+dash.draw('mt-model', (el) => {
+  const ans = AX.answers();
+  const names = ans.pay.map((k) => (k === 'medicare' && ans.medicare === 'ma' ? 'Medicare Advantage plans'
+    : k === 'medicare' && ans.medicare === 'traditional' ? 'traditional Medicare' : AX.PAYERS[k]));
+  const list = names.length < 3 ? names.join(' and ') : names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1];
+  el.textContent = `a company${names.length ? ' paid by ' + list + ',' : ''} serving adults ${ans.aud}+ ${REACH_PHRASE[ans.reach]}${AREA_PHRASE[ans.area]}${AX.changed() ? ', with your changes' : ''}`;
+});
+dash.draw('mt-where', (el) => {
+  const st = dash.params().state;
+  const c = dash.data('counties');
+  const row = st && c.status === 'ok' ? c.data.find((r) => r.state === st) : null;
+  el.textContent = row ? ' in ' + row.state_name : '';
+});
+const msNum = (name, field, show) => dash.draw(name, (el) => {
+  const s = dash.data('market_summary');
+  if (s.status === 'loading') { el.textContent = '—'; return; }
+  el.classList.remove('dash-skeleton');
+  const r = s.status === 'ok' && s.data && s.data[0];
+  el.textContent = r && r[field] != null ? show(r[field]) : '—';
+});
+msNum('mt-top', 'top_name', (v) => v);
+msNum('mt-score', 'top_score', (v) => String(v));
+msNum('mt-older', 'top_residents', (v) => AX.num(v));
+msNum('mt-reach', 'top_within30', (v) => AX.num(v));
+msNum('mk-n', 'counties_ranked', (v) => AX.num(v));
+msNum('mk-80', 'counties_80plus', (v) => AX.num(v));
+msNum('mk-top25', 'top25_residents', (v) => AX.num(v));
+
+/* ---------- Launch market: map, profile, scatter, table ---------- */
+const SCORE_BANDS = [[0, 'Under 20'], [1, '20 to 39'], [2, '40 to 59'], [3, '60 to 79'], [4, '80 or more']];
+const scoreStep = (s) => (s < 20 ? 0 : s < 40 ? 1 : s < 60 ? 2 : s < 80 ? 3 : 4);
+// Red (poor fit) through yellow to green (strong fit). The top greens are darker than the reds and yellow,
+// so the ends still differ in lightness for readers who can't tell red from green.
+const FIT_COLORS = ['#d64a32', '#f39b55', '#f5d657', '#57a85e', '#0b5a2a'];
+
+dash.draw('market-map', (el) => {
+  const m = dash.data('market'), rk = dash.data('ranked_market'), sh = dash.data('county_shapes');
+  const st = AX.statusOf(m, rk, sh);
+  if (st !== 'ok') { AX.empty(el, st); return; }
+  const state = dash.params().state || '';
+  const ranked = new Set(rk.data.map((r) => r.geoid));
+  AX.shapeMap(el, {
+    shapes: AX.shapesById(),
+    rows: m.data.filter((r) => !state || r.state === state),
+    fill: (r) => (ranked.has(r.geoid) ? FIT_COLORS[scoreStep(r.score)] : null),
+    legend: [...SCORE_BANDS.map(([k, t]) => [FIT_COLORS[k], t]), ['empty', 'Not ranked']],
+    aria: `Map of ${state ? 'the state\u2019s' : 'US'} counties colored by fit score.`,
+    title: (r) => `${r.county}, ${r.state}`,
+    lines: (r) => AX.marketLines(r, 'market'),
+    pick: (r) => dash.setParams({county: r.geoid}),
+    selected: AX.selectedGeoid(rk.data),
+  });
+});
+
+dash.draw('profile', (el) => {
+  const m = dash.data('market'), rk = dash.data('ranked_market'), fc = dash.data('factors');
+  const st = AX.statusOf(m, rk, fc);
+  if (st !== 'ok') { AX.empty(el, st); return; }
+  const g = AX.selectedGeoid(rk.data);
+  const r = g && m.data.find((d) => d.geoid === g);
+  if (!r) { el.replaceChildren(AX.mark('p', 'No county meets these filters. Try another state or a lower minimum.')); return; }
+  const where = 'geoid=' + r.geoid;
+  const a = AX.aud() + '+';
+  const rankRow = rk.data.find((d) => d.geoid === r.geoid);
+  const head = document.createElement('div');
+  head.className = 'lm-prof-head';
+  const nameBox = document.createElement('div');
+  const name = document.createElement('h3');
+  name.className = 'lm-prof-name';
+  name.textContent = `${r.county}, ${r.state}`;
+  const rank = document.createElement('p');
+  rank.className = 'lm-prof-rank';
+  rank.append('Rank ', AX.mark('span', AX.num(rankRow.rank), 'ranked_market', 'rank', where), ' of ', AX.num(rk.data.length), ' ranked counties');
+  nameBox.append(name, rank);
+  const score = document.createElement('div');
+  score.className = 'lm-prof-score';
+  const small = document.createElement('small');
+  small.textContent = 'fit score';
+  score.append(AX.mark('span', String(r.score), 'market', 'score', where), small);
+  head.append(nameBox, score);
+
+  const byId = new Map(fc.data.map((f) => [f.id, f]));
+  const nwAge = byId.has('median_net_worth') ? AX.urbanAge('median_net_worth', AX.aud()) : 'All';
+  const facts = document.createElement('dl');
+  facts.className = 'lm-facts';
+  [
+    [`Residents ${a}`, AX.num(r.residents), 'residents'],
+    [`${a} within 30 miles`, AX.num(r.within30), 'within30'],
+    [`${a} per square mile`, AX.density(r.per_sqmi), 'per_sqmi'],
+    [`${a} growth since 2020`, AX.pctText(r.growth), 'growth'],
+    ['Population', AX.num(r.population), 'population'],
+    [`Median net worth, ${AX.ageLabel(nwAge).toLowerCase()}`, r.median_net_worth == null ? 'no data' : '$' + AX.num(r.median_net_worth), 'median_net_worth'],
+  ].forEach(([label, text, field]) => {
+    const d = document.createElement('div');
+    const dt = document.createElement('dt');
+    dt.textContent = label;
+    const dd = document.createElement('dd');
+    dd.append(AX.mark('span', text, 'market', field, where));
+    d.append(dt, dd);
+    facts.append(d);
+  });
+
+  const items = AX.mixItems().filter((it) => it.weight > 0 && byId.has(it.id)).sort((x, y) => y.weight - x.weight);
+  const listTitle = document.createElement('p');
+  listTitle.className = 'lm-fx-meta';
+  listTitle.textContent = 'Points on each factor';
+  const list = document.createElement('div');
+  list.className = 'lm-fx-list';
+  items.forEach((it) => {
+    const f = byId.get(it.id);
+    const k = AX.mixKey(it);
+    const p = r['p_' + k], v = r['v_' + k];
+    const fx = document.createElement('div');
+    fx.className = 'lm-fx';
+    const top = document.createElement('div');
+    top.className = 'lm-fx-top';
+    const nm = document.createElement('span');
+    nm.className = 'lm-fx-name';
+    nm.textContent = AX.factorName(f, it);
+    const pts = document.createElement('span');
+    pts.className = 'lm-fx-pts';
+    if (p == null) pts.textContent = 'no data';
+    else pts.append(AX.mark('span', String(p), 'market', 'p_' + k, where), ' pts');
+    top.append(nm, pts);
+    const track = document.createElement('div');
+    track.className = 'lm-fx-track';
+    const bar = document.createElement('div');
+    bar.className = 'lm-fx-bar';
+    bar.style.width = (p == null ? 0 : Math.max(2, p)) + '%';
+    bar.style.background = AX.c0();
+    track.append(bar);
+    const meta = document.createElement('div');
+    meta.className = 'lm-fx-meta';
+    meta.append(v == null ? 'No data' : AX.mark('span', AX.fmt(v, f), 'market', 'v_' + k, where), (AX.UNIT[f.unit] || '') + ` · ${it.low ? 'less is better' : 'more is better'} · weight ${AX.WEIGHT[it.weight].toLowerCase()}`);
+    fx.append(top, track, meta);
+    list.append(fx);
+  });
+  el.replaceChildren(head, facts, listTitle, list);
+});
+
+// Columns for the ranking: fixed ones plus one per factor in the mix.
+const marketColumns = () => {
+  const fc = dash.data('factors');
+  const a = AX.aud();
+  const byId = new Map(fc.status === 'ok' ? fc.data.map((f) => [f.id, f]) : []);
+  const items = AX.mixItems().filter((it) => it.weight > 0 && byId.has(it.id)).sort((x, y) => y.weight - x.weight);
+  const nwAge = byId.has('median_net_worth') ? AX.urbanAge('median_net_worth', a) : 'All';
+  const factorCols = items.map((it) => {
+    const f = byId.get(it.id);
+    return {field: 'v_' + AX.mixKey(it), pts: 'p_' + AX.mixKey(it), label: AX.factorName(f, it) + (it.low ? ' (less is better)' : ''), fmt: (v) => (v == null ? '' : AX.fmt(v, f)), num: true};
+  });
+  const has = (id, age) => items.some((it) => it.id === id && it.age === age);
+  const fixed = [
+    has('population', 'All') ? null : {field: 'population', label: 'Population', fmt: (v) => (v == null ? '' : AX.num(v)), num: true},
+    has('residents', a + '+') ? null : {field: 'residents', label: `Residents ${a}+`, fmt: (v) => (v == null ? '' : AX.num(v)), num: true},
+    has('median_net_worth', nwAge) ? null : {field: 'median_net_worth', label: `Median net worth, ${AX.ageLabel(nwAge).toLowerCase()}`, fmt: (v) => (v == null ? '' : '$' + AX.num(v)), num: true},
+  ].filter(Boolean);
+  return [
+    {field: 'rank', label: 'Rank', fmt: (v) => AX.num(v), num: true},
+    {field: 'county', label: 'County', fmt: (v) => v},
+    {field: 'state', label: 'State', fmt: (v) => v},
+    {field: 'score', label: 'Fit score', fmt: (v) => String(v), num: true},
+    ...factorCols,
+    ...fixed,
+  ];
+};
+
+dash.draw('market-head', (thead) => {
+  const cols = marketColumns();
+  const tr = document.createElement('tr');
+  cols.forEach((c) => {
+    const th = document.createElement('th');
+    th.dataset.field = c.field;
+    th.textContent = c.label;
+    if (c.num) th.className = 'ax-num';
+    tr.append(th);
+  });
+  thead.replaceChildren(tr);
+});
+
+dash.draw('market-body', (tb) => {
+  const r = dash.data('ranked_market');
+  const cols = marketColumns();
+  const msg = (text) => {
+    const tr = document.createElement('tr');
+    const td = document.createElement('td');
+    td.colSpan = cols.length;
+    td.className = 'ax-msg';
+    td.textContent = text;
+    tr.append(td);
+    tb.replaceChildren(tr);
+  };
+  if (r.status === 'error') { msg('The ranking couldn’t load its data. Reload the page to try again.'); return; }
+  if (r.status !== 'ok' || !r.data) { tb.replaceChildren(); return; }
+  // With the toggle on, keep the 100 ranked counties with the most residents in the chosen age group, in fit order.
+  let pool = r.data;
+  if (AX.mlarge) {
+    const big = new Set(r.data.slice().sort((x, y) => (y.residents || 0) - (x.residents || 0)).slice(0, 100).map((d) => d.geoid));
+    pool = r.data.filter((d) => big.has(d.geoid));
+  }
+  const rows = pool.slice(0, AX.mlarge ? 100 : 25);
+  if (!rows.length) { msg('No county meets these filters.'); return; }
+  const g = AX.selectedGeoid(r.data);
+  tb.replaceChildren(...rows.map((d) => {
+    const tr = document.createElement('tr');
+    tr.dataset.key = d.geoid;
+    tr.className = 'lm-row' + (d.geoid === g ? ' is-selected' : '');
+    tr.tabIndex = 0;
+    const pick = () => dash.setParams({county: d.geoid});
+    tr.onclick = pick;
+    tr.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } };
+    cols.forEach((c) => {
+      const td = document.createElement('td');
+      if (c.num) td.className = 'ax-num';
+      td.append(c.fmt(d[c.field]));
+      if (c.pts && d[c.pts] != null) {
+        const track = document.createElement('div');
+        track.className = 'lm-cell-track';
+        const bar = document.createElement('div');
+        bar.className = 'lm-cell-bar';
+        bar.style.width = Math.max(2, d[c.pts]) + '%';
+        bar.style.background = AX.c0();
+        track.append(bar);
+        td.append(track);
+      }
+      tr.append(td);
+    });
+    return tr;
+  }));
+});
+
+/* ---------- Explore one metric: controls ---------- */
+document.querySelectorAll('#ax-x').forEach((s) => {
+  s.value = ['people_per_sqmi', 'pct_75plus', 'median_age'].includes(dash.params().xaxis) ? dash.params().xaxis : 'people_per_sqmi';
+  s.addEventListener('change', () => dash.setParams({xaxis: s.value}));
+});
+document.querySelectorAll('#ax-order').forEach((s) => {
+  s.value = dash.params().order || 'desc';
+  s.addEventListener('change', () => dash.setParams({order: s.value}));
+});
+document.querySelectorAll('#ax-minpop').forEach((s) => {
+  s.value = String(dash.params().minpop ?? 1000);
+  s.addEventListener('change', () => dash.setParams({minpop: Number(s.value)}));
+});
+document.querySelectorAll('#ax-search').forEach((inp) => {
+  inp.addEventListener('input', () => { window.AX.search = inp.value; dash.draw('ranking-body'); });
+});
+
+dash.draw('metric-select', (sel) => {
+  const m = dash.data('metric_info');
+  if (m.status !== 'ok') { sel.replaceChildren(); return; }
+  const groups = d3.groups(m.data, (d) => d.category);
+  sel.replaceChildren(...groups.map(([cat, rows]) => {
+    const g = document.createElement('optgroup');
+    g.label = cat;
+    rows.forEach((r) => g.append(new Option(r.label, r.id)));
+    return g;
+  }));
+  const i = AX.info();
+  sel.value = i ? i.id : '';
+  sel.onchange = () => {
+    const next = m.data.find((r) => r.id === sel.value);
+    const have = next ? String(next.ages).split(', ') : [];
+    const a = dash.params().age;
+    dash.setParams({metric: sel.value, age: have.includes(a) ? a : have.includes('75-84') ? '75-84' : 'All'});
+  };
+});
+
+dash.draw('age-select', (sel) => {
+  const i = AX.info();
+  if (!i) { sel.replaceChildren(); return; }
+  sel.replaceChildren(...AX.ages(i).map((a) => new Option(AX.ageLabel(a), a)));
+  sel.value = AX.age(i);
+  sel.onchange = () => dash.setParams({age: sel.value});
+});
+
+dash.draw('metric-phrase', (el) => {
+  const i = AX.info();
+  el.textContent = i ? `${AX.lc(i.label)}${AX.unitText(i)} (${AX.ageLabel(AX.age(i)).toLowerCase()})` : '—';
+});
+dash.draw('t-metric', (el) => {
+  const i = AX.info();
+  el.textContent = i ? `${i.label}, ${AX.ageLabel(AX.age(i)).toLowerCase()}` : '—';
+});
+dash.draw('t-unit', (el) => { el.textContent = AX.unitText(AX.info()); });
+dash.draw('k-unit', (el) => { el.textContent = AX.unitText(AX.info()); });
+
+const metaField = (name, field, show) => dash.draw(name, (el) => {
+  const i = AX.info();
+  if (!i) { el.replaceChildren('—'); return; }
+  el.replaceChildren(AX.mark('span', show(i[field]), 'metric_info', field, 'id=' + i.id));
+});
+metaField('m-cat', 'category', (v) => v);
+metaField('m-year', 'year', (v) => String(v).replace('-', '–'));
+metaField('m-n', 'counties_all_ages', (v) => AX.num(v));
+
+const sumNum = (name, field, show) => dash.draw(name, (el) => {
+  const s = dash.data('summary');
+  if (s.status === 'loading') { el.textContent = '—'; return; }
+  el.classList.remove('dash-skeleton');
+  const r = s.status === 'ok' && s.data && s.data[0];
+  el.textContent = r ? show(r[field], AX.info()) : '—';
+});
+sumNum('k-n', 'counties_with_data', (v) => AX.num(v));
+sumNum('k-total', 'total_counties', (v) => AX.num(v));
+sumNum('k-pop', 'pop75_millions', (v) => d3.format('.1f')(v));
+sumNum('k-median', 'median', (v, i) => AX.fmt(v, i));
+sumNum('k-p25', 'p25', (v, i) => AX.fmt(v, i));
+sumNum('k-p75', 'p75', (v, i) => AX.fmt(v, i));
+sumNum('t-median', 'median', (v, i) => AX.fmt(v, i));
+
+const bandVal = (name, id) => dash.draw(name, (el) => {
+  const b = dash.data('bands');
+  const r = b.status === 'ok' && b.data ? b.data.find((d) => d.band_id === id) : null;
+  el.textContent = r ? AX.fmt(r.median_value, AX.info()) : '—';
+});
+bandVal('t-rural', 'lt10');
+bandVal('t-urban', '1000plus');
+dash.draw('t-dir', (el) => {
+  const b = dash.data('bands');
+  if (b.status !== 'ok' || !b.data) { el.textContent = '—'; return; }
+  const R = b.data.find((d) => d.band_id === 'lt10'), U = b.data.find((d) => d.band_id === '1000plus');
+  const a = R && R.median_value, c = U && U.median_value;
+  if (a == null || c == null) { el.textContent = 'compared with'; return; }
+  const rel = Math.abs(a - c) / Math.max(Math.abs(c), 1e-9);
+  el.textContent = rel < 0.03 ? 'about the same as' : a > c ? 'higher than' : 'lower than';
+});
+
+/* ---------- Explore one metric: charts and table ---------- */
+const viewLines = (r, i) => {
+  const w = 'geoid=' + r.geoid;
+  return [
+    [i.label + ':', AX.fmt(r.value, i), 'view', 'value', w, AX.unitText(i)],
+    ['Residents 75+:', AX.num(r.pop_75plus), 'view', 'pop_75plus', w],
+    ['Share 75+:', AX.pctText(r.pct_75plus), 'view', 'pct_75plus', w],
+    ['Population:', AX.num(r.population), 'view', 'population', w],
+    ['People per sq mi:', AX.density(r.people_per_sqmi), 'view', 'people_per_sqmi', w],
+    ['Median age:', d3.format('.1f')(r.median_age), 'view', 'median_age', w],
+  ];
+};
+
+dash.draw('map', (el) => {
+  const v = dash.data('view'), sh = dash.data('county_shapes'), i = AX.info();
+  const st = AX.statusOf(v, sh);
+  if (st !== 'ok' || !i) { AX.empty(el, st); return; }
+  const vals = v.data.filter((r) => r.value != null && r.lat != null).map((r) => r.value).sort(d3.ascending);
+  const thr = vals.length ? Array.from(new Set([0.2, 0.4, 0.6, 0.8].map((q) => d3.quantile(vals, q)))) : [];
+  const nb = thr.length + 1;
+  const stepOf = (k) => (nb === 1 ? 4 : Math.round((k * 4) / (nb - 1)));
+  const legend = [];
+  for (let k = 0; k < nb; k++) {
+    const lo = thr[k - 1], hi = thr[k];
+    const text = nb === 1 ? 'All values'
+      : k === 0 ? `Under ${AX.fmt(hi, i)}`
+      : k === nb - 1 ? `${AX.fmt(lo, i)} or more`
+      : `${AX.fmt(lo, i)} to ${AX.fmt(hi, i)}`;
+    legend.push([AX.seq(stepOf(k)), text]);
+  }
+  legend.push(['empty', 'No data']);
+  AX.shapeMap(el, {
+    shapes: AX.shapesById(),
+    rows: v.data,
+    fill: (r) => (r.value == null ? null : AX.seq(stepOf(d3.bisectRight(thr, r.value)))),
+    legend,
+    aria: `Map of US counties colored by ${AX.lc(i.label)}.`,
+    title: (r) => `${r.county}, ${r.state}`,
+    lines: (r) => viewLines(r, i),
+  });
+});
+
+const X_LABEL = {people_per_sqmi: 'People per square mile (log scale)', pct_75plus: 'Share of residents 75+', median_age: 'Median age'};
+dash.draw('scatter', (el) => {
+  const v = dash.data('view'), s = dash.data('summary'), i = AX.info();
+  if (v.status !== 'ok' || !i) { AX.empty(el, v.status); return; }
+  const xk = X_LABEL[dash.params().xaxis] ? dash.params().xaxis : 'people_per_sqmi';
+  const isLog = xk === 'people_per_sqmi';
+  const P0 = v.data.filter((r) => r.value != null && r[xk] != null && (!isLog || r[xk] > 0));
+  if (!P0.length) { el.replaceChildren(AX.mark('p', 'No county has a value for this metric and age group.')); return; }
+  const w = Math.max(280, el.clientWidth || 500);
+  const h = Math.round(Math.min(420, Math.max(260, w * 0.7)));
+  const y = d3.scaleLinear().domain(d3.extent(P0, (r) => r.value)).nice();
+  const yTicks = y.ticks(5);
+  const box = document.createElement('div');
+  box.className = 'ax-plot';
+  const svg = d3.create('svg').attr('viewBox', `0 0 ${w} ${h}`).attr('role', 'img')
+    .attr('aria-label', `Scatter plot of ${AX.lc(i.label)} against ${X_LABEL[xk].toLowerCase()} for each county.`);
+  box.append(svg.node());
+  el.replaceChildren(box);
+  const probe = svg.append('g');
+  const widths = yTicks.map((t) => probe.append('text').text(AX.tick(t, i)).node().getComputedTextLength() || AX.tick(t, i).length * 7);
+  probe.remove();
+  const m = {top: 22, right: 12, bottom: 40, left: Math.ceil(d3.max(widths)) + 12};
+  const iw = w - m.left - m.right, ih = h - m.top - m.bottom;
+  y.range([m.top + ih, m.top]);
+  const ext = d3.extent(P0, (r) => r[xk]);
+  const x = isLog ? d3.scaleLog().domain([Math.max(0.05, ext[0]), ext[1]]).range([m.left, m.left + iw])
+    : d3.scaleLinear().domain(ext).nice().range([m.left, m.left + iw]);
+  const xTicks = isLog ? [0.1, 1, 10, 100, 1000, 10000, 100000].filter((t) => t >= x.domain()[0] && t <= x.domain()[1]) : x.ticks(Math.max(3, Math.floor(iw / 80)));
+  const xFmt = (t) => (xk === 'pct_75plus' ? t + '%' : d3.format(',~g')(t));
+  svg.append('g').attr('transform', `translate(${m.left},0)`)
+    .call(d3.axisLeft(y).tickValues(yTicks).tickSize(-iw).tickFormat((t) => AX.tick(t, i)))
+    .call((g) => g.select('.domain').remove());
+  svg.append('g').attr('transform', `translate(0,${m.top + ih})`)
+    .call(d3.axisBottom(x).tickValues(xTicks).tickSize(4).tickFormat(xFmt));
+  svg.append('text').attr('x', m.left + iw).attr('y', h - 4).attr('text-anchor', 'end').text(X_LABEL[xk]);
+  svg.append('text').attr('x', 0).attr('y', 12).text(i.label + AX.unitText(i));
+  const rs = d3.scaleSqrt().domain([0, d3.max(P0, (r) => r.pop_75plus) || 1]).range([0, Math.max(8, Math.min(16, w / 40))]);
+  const P = P0.map((r) => ({r, x: x(Math.max(x.domain()[0], r[xk])), y: y(r.value), rad: Math.max(1.6, rs(r.pop_75plus || 0))})).sort((a, b) => b.rad - a.rad);
+  svg.append('g').selectAll('circle').data(P).join('circle')
+    .attr('cx', (p) => p.x).attr('cy', (p) => p.y).attr('r', (p) => p.rad)
+    .style('fill', AX.c0()).style('fill-opacity', 0.42)
+    .style('stroke', 'var(--color-panel)').style('stroke-width', 0.5);
+  const med = s.status === 'ok' && s.data && s.data[0] ? s.data[0].median : null;
+  if (med != null) {
+    svg.append('line').attr('x1', m.left).attr('x2', m.left + iw).attr('y1', y(med)).attr('y2', y(med))
+      .style('stroke', 'var(--cds-chart-reference)').style('stroke-width', 1.5).style('stroke-dasharray', '4 4');
+    svg.append('text').attr('x', m.left + iw).attr('y', y(med) - 5).attr('text-anchor', 'end').text('Median');
+  }
+  AX.interact({svg, P, box, w, title: (r) => `${r.county}, ${r.state}`, lines: (r) => viewLines(r, i)});
+});
+
+dash.draw('bands', (el) => {
+  const b = dash.data('bands'), i = AX.info();
+  if (b.status !== 'ok' || !b.data || !i) { AX.empty(el, b.status); return; }
+  const max = d3.max(b.data, (r) => r.median_value) || 1;
+  el.replaceChildren(...b.data.map((r) => {
+    const where = 'band_id=' + r.band_id;
+    const row = document.createElement('div');
+    row.className = 'ax-band';
+    const name = document.createElement('div');
+    name.className = 'ax-band-name';
+    name.append(AX.mark('span', r.band, 'bands', 'band', where));
+    const sub = document.createElement('span');
+    sub.className = 'ax-band-sub';
+    sub.append(AX.mark('span', AX.num(r.counties_with_data), 'bands', 'counties_with_data', where), ' counties · ',
+      AX.mark('span', AX.num(r.pop_75plus), 'bands', 'pop_75plus', where), ' aged 75+');
+    name.append(sub);
+    const track = document.createElement('div');
+    track.className = 'ax-band-track';
+    const bar = document.createElement('div');
+    bar.className = 'ax-band-bar';
+    bar.style.width = r.median_value == null ? '0%' : Math.max(0, (r.median_value / max) * 100) + '%';
+    bar.style.background = AX.c0();
+    track.append(bar);
+    const val = AX.mark('div', AX.fmt(r.median_value, i), 'bands', 'median_value', where);
+    val.className = 'ax-band-val';
+    row.append(name, track, val);
+    return row;
+  }));
+});
+
+dash.draw('ranking-body', (tb) => {
+  const r = dash.data('ranked'), i = AX.info();
+  const msg = (text) => {
+    const tr = document.createElement('tr');
+    const td = document.createElement('td');
+    td.colSpan = 9;
+    td.className = 'ax-msg';
+    td.textContent = text;
+    tr.append(td);
+    tb.replaceChildren(tr);
+  };
+  if (r.status === 'error') { msg('The ranking couldn’t load the county data. Reload the page to try again.'); return; }
+  if (r.status !== 'ok' || !r.data || !i) { tb.replaceChildren(); return; }
+  const q = (AX.search || '').trim().toLowerCase();
+  const rows = q
+    ? r.data.filter((d) => `${d.county}, ${d.state}`.toLowerCase().includes(q) || String(d.state).toLowerCase() === q).slice(0, 100)
+    : r.data.slice(0, 25);
+  if (!rows.length) { msg(q ? `No county in this ranking matches “${AX.search.trim()}”.` : 'No county has a value for this metric and age group.'); return; }
+  const cell = (text, cls) => { const td = document.createElement('td'); td.textContent = text; if (cls) td.className = cls; return td; };
+  tb.replaceChildren(...rows.map((d) => {
+    const tr = document.createElement('tr');
+    tr.dataset.key = d.geoid;
+    tr.append(
+      cell(AX.num(d.rank), 'ax-num'),
+      cell(d.county),
+      cell(d.state),
+      cell(AX.fmt(d.value, i), 'ax-num'),
+      cell(AX.num(d.pop_75plus), 'ax-num'),
+      cell(AX.pctText(d.pct_75plus), 'ax-num'),
+      cell(AX.num(d.population), 'ax-num'),
+      cell(AX.density(d.people_per_sqmi), 'ax-num'),
+      cell(AX.num(d.land_sqmi), 'ax-num'),
+    );
+    return tr;
+  }));
+});
+</script>
+<footer class="site-footer" id="site-footer">
+  <p>Data: Urban Institute, <a href="https://datacatalog.urban.org/dataset/metrics-data-aging-opportunity-dashboard" target="_blank" rel="noopener">Metrics Data for the Aging Opportunity Dashboard</a> (ODC-BY 1.0); U.S. Census Bureau population estimates, Gazetteer, County Business Patterns and county boundaries; CMS Medicare Advantage and nursing home files; USDA Economic Research Service Rural-Urban Continuum Codes. See "About the data" for years and definitions.</p>
+  <p>Data as of November 2026. Built for <a href="https://www.agetech-ventures.com/" target="_blank" rel="noopener">AgeTech Ventures</a>.</p>
+</footer>
+</main>
+</body>
+</html>
