@@ -136,7 +136,7 @@ a { color: var(--accent); }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
-<script>window.DASH_CONFIG = {"datasets":{"counties":"data/counties.json","metrics":"data/metrics.json","metric_info":"data/metric_info.json","nursing_homes":"data/nursing_homes.json","businesses":"data/businesses.json","medicare_advantage":"data/medicare_advantage.json","rural_codes":"data/rural_codes.json","county_shapes":"data/county_shapes.json"},"params":{"pay":["consumer"],"aud":"75","reach":"home","medicare":"both","area":"any","mix":"median_net_worth@75-84:2,median_income@75-84:1,residents@75+:2,within30@75+:3,per_sqmi@75+:3","mfloor":1000,"state":"","county":"","metric":"median_net_worth","age":"75-84","xaxis":"people_per_sqmi","order":"desc","minpop":1000}};</script>
+<script>window.DASH_CONFIG = {"datasets":{"counties":"data/counties.json","metrics":"data/metrics.json","metric_info":"data/metric_info.json","nursing_homes":"data/nursing_homes.json","businesses":"data/businesses.json","medicare_advantage":"data/medicare_advantage.json","rural_codes":"data/rural_codes.json","county_shapes":"data/county_shapes.json"},"params":{"pay":["consumer"],"aud":"75-84","reach":"home","medicare":"both","area":"any","mix":"median_net_worth@75-84:2,median_income@75-84:1,residents@75-84:2,within30@75-84:3,per_sqmi@75-84:3","mfloor":1000,"state":"","county":"","metric":"median_net_worth","age":"75-84","xaxis":"people_per_sqmi","order":"desc","minpop":1000}};</script>
 <script src="dash-runtime.js"></script>
 </head>
 <body>
@@ -234,7 +234,7 @@ a { color: var(--accent); }
 .lm-reveal { display: flex; justify-content: flex-start; padding-top: var(--cds-gap-sm); }
 .lm-btn-big { font-size: var(--cds-font-size-body); padding: 10px 20px; }
 .lm-results { scroll-margin-top: 12px; }
-.lm-score { padding: var(--cds-pad-lg); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background-color: var(--color-panel); scroll-margin-top: 12px; }
+.lm-score { padding: var(--cds-pad-lg); border: 1.5px solid var(--accent, #8b5cc4); border-radius: var(--cds-radius); background-color: var(--color-panel); scroll-margin-top: 12px; }
 .lm-score-list { list-style: disc; margin: 0; padding-left: 1.2em; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: var(--cds-gap-sm) var(--cds-gap-xl); }
 .lm-score-list li { line-height: 1.45; }
 .lm-score-list li b { font-weight: var(--cds-font-weight-medium); }
@@ -280,7 +280,11 @@ a { color: var(--accent); }
 .lm-fx-track { height: 8px; border-radius: 4px; background-color: var(--cds-chart-grid); overflow: hidden; }
 .lm-fx-bar { height: 100%; border-radius: 0 4px 4px 0; }
 .lm-fx-meta { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); font-variant-numeric: tabular-nums; }
-.lm-county-search { position: relative; display: grid; gap: var(--cds-gap-xs); max-width: 24rem; }
+.lm-map-tools { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--cds-gap-md) var(--cds-gap-lg); }
+.lm-scope { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cds-gap-sm) var(--cds-gap-md); }
+.lm-scope label { font-weight: var(--cds-font-weight-medium); }
+.lm-scope .dash-select { min-width: 12rem; max-width: 100%; }
+.lm-county-search { position: relative; display: grid; gap: var(--cds-gap-xs); max-width: 24rem; flex: 1 1 16rem; }
 .lm-county-search .ax-input { width: 100%; }
 .lm-county-results { position: absolute; top: 100%; left: 0; right: 0; z-index: 5; margin-top: 4px; display: grid; max-height: 18rem; overflow-y: auto; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); box-shadow: var(--cds-shadow-popover); border-radius: var(--cds-radius); }
 .lm-county-results:empty { display: none; }
@@ -308,7 +312,7 @@ a { color: var(--accent); }
 <div class="ax" id="explorer">
   <header class="ax-head" id="header">
     <h1 class="ax-title" id="title">AgeTech Launch Market Finder</h1>
-    <p class="ax-intro" id="intro">Where do you want to launch your next company for the future of aging?</p>
+    <p class="ax-intro" id="intro">Where should you launch your next company for the future of aging?</p>
   </header>
 
   <div class="lm-tabs" role="tablist" aria-label="Views">
@@ -331,9 +335,9 @@ a { color: var(--accent); }
         </div>
         <div class="lm-q" id="q-aud" role="radiogroup" aria-labelledby="q-aud-title">
           <p class="lm-q-title" id="q-aud-title">2. Who is it mainly for?</p>
-          <label class="lm-opt"><input type="radio" name="aud" value="65" id="aud-65"><span>Adults 65 and older</span></label>
-          <label class="lm-opt"><input type="radio" name="aud" value="75" id="aud-75"><span>Adults 75 and older</span></label>
-          <label class="lm-opt"><input type="radio" name="aud" value="85" id="aud-85"><span>The oldest adults, 85 and older</span></label>
+          <label class="lm-opt"><input type="radio" name="aud" value="65-74" id="aud-65-74"><span>Adults 65–74</span></label>
+          <label class="lm-opt"><input type="radio" name="aud" value="75-84" id="aud-75-84"><span>Adults 75–84</span></label>
+          <label class="lm-opt"><input type="radio" name="aud" value="85+" id="aud-85"><span>Adults 85 and older</span></label>
         </div>
         <div class="lm-q" id="q-reach" role="radiogroup" aria-labelledby="q-reach-title">
           <p class="lm-q-title" id="q-reach-title">3. How do you reach customers?</p>
@@ -373,38 +377,16 @@ a { color: var(--accent); }
       </details>
     </section>
 
-    <section class="lm-step" id="filters-step" aria-labelledby="filters-title">
-      <h2 class="lm-step-title" id="filters-title">Narrow your results</h2>
-      <p class="ax-desc">Pick a state or a minimum number of older residents. Scores still compare every US county.</p>
-    <div class="ax-controls" id="market-filters">
-      <div class="ax-field">
-        <label for="lm-state">State</label>
-        <select id="lm-state" class="dash-select" data-draw="state-select" data-source="counties"></select>
-      </div>
-      <div class="ax-field">
-        <label for="lm-floor">Residents <span data-draw="age-label">—</span> in the county</label>
-        <select id="lm-floor" class="dash-select">
-          <option value="0">Any number</option>
-          <option value="1000">1,000 or more</option>
-          <option value="5000">5,000 or more</option>
-          <option value="25000">25,000 or more</option>
-        </select>
-      </div>
+    <div class="lm-scope" id="scope-row">
+      <label for="lm-state">Show counties in</label>
+      <select id="lm-state" class="dash-select" data-draw="state-select" data-source="counties"></select>
     </div>
-    </section>
-
-    <p class="ax-lede" id="market-takeaway">For <span data-draw="mt-model">—</span>, the best fit<span data-draw="mt-where"></span> is <b data-draw="mt-top" data-source="market_summary" data-field="top_name" data-row="0">—</b>, with a fit score of <b data-draw="mt-score" data-source="market_summary" data-field="top_score" data-row="0">—</b>. It has <b data-draw="mt-older" data-source="market_summary" data-field="top_residents" data-row="0">—</b> residents <span data-draw="age-label">—</span>, and <b data-draw="mt-reach" data-source="market_summary" data-field="top_within30" data-row="0">—</b> live within 30 miles.</p>
 
     <section class="ax-kpis" id="market-kpis" aria-label="Summary of the ranking">
       <div class="ax-card ax-kpi" id="mkpi-ranked">
         <p class="ax-kpi-label">Counties ranked</p>
         <p class="ax-kpi-value"><span class="dash-skeleton" data-draw="mk-n" data-source="market_summary" data-field="counties_ranked" data-row="0">—</span></p>
-        <p class="ax-kpi-note">that have a score and meet your filters</p>
-      </div>
-      <div class="ax-card ax-kpi" id="mkpi-80">
-        <p class="ax-kpi-label">Counties scoring 80 or more</p>
-        <p class="ax-kpi-value"><span class="dash-skeleton" data-draw="mk-80" data-source="market_summary" data-field="counties_80plus" data-row="0">—</span></p>
-        <p class="ax-kpi-note">out of 100 on the fit score</p>
+        <p class="ax-kpi-note"><span data-draw="mk-pct" data-source="market_summary" data-field="pct_ranked" data-row="0">—</span>% of all <span data-draw="mk-total" data-source="market_summary" data-field="total_counties" data-row="0">—</span> US counties have a score and meet your filters</p>
       </div>
       <div class="ax-card ax-kpi" id="mkpi-top25">
         <p class="ax-kpi-label">Residents <span data-draw="age-label">—</span> in the top 25</p>
@@ -415,10 +397,21 @@ a { color: var(--accent); }
 
     <div class="lm-grid">
       <section class="ax-card" id="market-map-card">
-        <div class="ax-field lm-county-search" id="county-search">
-          <label for="lm-county">Find a county</label>
-          <input id="lm-county" class="ax-input" type="search" placeholder="Start typing, e.g. Nassau" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="lm-county-results">
-          <div class="lm-county-results" id="lm-county-results" role="listbox" aria-label="Matching counties" data-draw="county-results" data-source="ranked_market"></div>
+        <div class="lm-map-tools" id="map-tools">
+          <div class="ax-field lm-county-search" id="county-search">
+            <label for="lm-county">Find a county</label>
+            <input id="lm-county" class="ax-input" type="search" placeholder="Start typing, e.g. Nassau" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="lm-county-results">
+            <div class="lm-county-results" id="lm-county-results" role="listbox" aria-label="Matching counties" data-draw="county-results" data-source="ranked_market"></div>
+          </div>
+          <div class="ax-field">
+            <label for="lm-floor">Minimum residents <span data-draw="age-label">—</span> per county</label>
+            <select id="lm-floor" class="dash-select">
+              <option value="0">Any number</option>
+              <option value="1000">1,000 or more</option>
+              <option value="5000">5,000 or more</option>
+              <option value="25000">25,000 or more</option>
+            </select>
+          </div>
         </div>
         <div class="ax-card-head">
           <h2 id="market-map-title">Fit score by county</h2>
@@ -580,11 +573,25 @@ a { color: var(--accent); }
     <section class="ax-card" id="about-score">
       <h2 id="about-score-title">How the fit score works</h2>
       <ol class="lm-about-list">
-        <li>Your answers pick the factors that matter for your company and how much each one counts: Low counts once (1&times;), Medium twice (2&times;) and High three times (3&times;). A factor's share of the score is its weight divided by the total. For example, one High, two Medium and one Low factor add up to 8, so the High factor is 3 of 8, or 38% of the score. You can change the factors under "What the score counts".</li>
+        <li>Your answers pick the factors that matter for your company and how much each one counts: Low counts once (1&times;), Medium twice (2&times;) and High three times (3&times;). A factor's share of the score is its weight divided by the total. For example, one High, two Medium and one Low factor add up to 8, so the High factor is 3 of 8, or 38% of the score. You can change them under "Change weights or add a factor".</li>
         <li>For each factor, every US county gets a percentile from 0 to 100: where it stands against every other county. Where less is better, such as few annual wellness visits, the percentile is flipped.</li>
         <li>The fit score is the weighted average of those percentiles. A county needs data on every High (3&times;) factor, and on at least two-thirds of the weight overall, to get a score. When a lower-weight factor has no data, the score uses the others, and the county's profile says which one is missing.</li>
         <li>The state, size and metro or rural choices narrow the ranking. They don't change any county's score, so a 90 means the same in every view.</li>
       </ol>
+    </section>
+
+    <section class="ax-card" id="about-calc">
+      <h2 id="about-calc-title">How each number is calculated</h2>
+      <ul class="lm-about-notes">
+        <li><b>Within 30 miles.</b> Census gives each county an "internal point", a spot inside it near its geographic center. A county's 30-mile total adds up every county whose internal point is within 30 straight-line miles of its own, itself included. Each of those counties counts in full, and a county just past 30 miles counts not at all. The total crosses state lines even when you show one state: Bergen County, NJ, adds up 14 counties in New Jersey and New York, Manhattan included. Senior living communities, home care businesses and nursing homes within 30 miles are counted the same way. It stands in for a service area: distance as the crow flies, not driving time, and rough for very large counties. Los Angeles County's 30-mile total counts only itself, as do 519 of the 3,144 counties.</li>
+        <li><b>Per square mile.</b> The county's residents in the age group divided by its land area in square miles, water left out. It covers the county alone, not the 30-mile area, and averages over all of its land, so big counties with empty stretches look sparse: San Bernardino County, CA, has 97,162 residents 75–84 but 4.8 per square mile across 20,068 square miles.</li>
+        <li><b>Share of residents.</b> Residents in the age group divided by the county's total population, both on July 1, 2025.</li>
+        <li><b>Growth since 2020.</b> The percent change in residents in the age group from July 1, 2020, to July 1, 2025, both from the same Census estimates release, so the two years are comparable.</li>
+        <li><b>Percentiles.</b> A county's percentile on a factor compares it with every US county that has data on that factor, whatever state or filters you pick. The lowest value gets 0 and the highest 100, and counties with the same value share the percentile in the middle of their group.</li>
+        <li><b>Ties in the ranking.</b> Counties with the same fit score are ordered by residents in the age group within 30 miles, most first.</li>
+        <li><b>Minimum residents.</b> Counts the county's own residents in the age group, not its 30-mile total.</li>
+        <li><b>Senior living communities per 1,000 residents 75+.</b> This factor, under "Add a factor", always divides by residents 75+, whatever age group you pick.</li>
+      </ul>
     </section>
 
     <section class="ax-card" id="about-sources">
@@ -596,7 +603,7 @@ a { color: var(--accent); }
           </thead>
           <tbody>
             <tr><td><a href="https://datacatalog.urban.org/dataset/metrics-data-aging-opportunity-dashboard" target="_blank" rel="noopener">Urban Institute, Metrics Data for the Aging Opportunity Dashboard, released November 2026</a></td><td>2021 to 2025, varies by metric</td><td>Income, net worth, savings, debt, poverty, health care use, long-term care quality and mortality, by age group</td></tr>
-            <tr><td><a href="https://www.census.gov/data/datasets/time-series/demo/popest/2020s-counties-detail.html" target="_blank" rel="noopener">U.S. Census Bureau, county population estimates</a></td><td>July 1, 2025, and 2020 for growth</td><td>Residents 65+, 75+ and 85+, total population, and growth since 2020</td></tr>
+            <tr><td><a href="https://www.census.gov/data/datasets/time-series/demo/popest/2020s-counties-detail.html" target="_blank" rel="noopener">U.S. Census Bureau, county population estimates</a></td><td>July 1, 2025, and 2020 for growth</td><td>Residents 65–74, 75–84 and 85+ (75+ on the Explore tab), total population, and growth since 2020</td></tr>
             <tr><td><a href="https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.html" target="_blank" rel="noopener">U.S. Census Bureau, 2025 Gazetteer</a></td><td>2025</td><td>Land area and each county's location, for density and the 30-mile reach</td></tr>
             <tr><td><a href="https://www.census.gov/geographies/mapping-files/time-series/geo/cartographic-boundary.html" target="_blank" rel="noopener">U.S. Census Bureau, cartographic boundary file for counties</a></td><td>2024</td><td>County outlines for the maps</td></tr>
             <tr><td><a href="https://www.census.gov/programs-surveys/cbp.html" target="_blank" rel="noopener">U.S. Census Bureau, County Business Patterns</a></td><td>2023</td><td>Senior living communities and home care businesses</td></tr>
@@ -613,8 +620,7 @@ a { color: var(--accent); }
       <h2 id="about-terms-title">Definitions and gaps</h2>
       <ul class="lm-about-notes">
         <li><b>A shortlist, not an answer.</b> The fit score ranks counties against each other on the factors your answers set. It doesn't measure competition, regulation or real demand for a product, which this data doesn't cover.</li>
-        <li><b>Age groups.</b> Urban Institute doesn't report a 75+ group for most metrics, so wealth, income and health factors use the closest group it does report: ages 75–84 for 75+, 85+ for 85+, and 65+ (or 65–74 where Urban has no 65+ group) for 65+. Each factor's label names the ages used.</li>
-        <li><b>Within 30 miles.</b> Adds up every county whose Census internal point is within 30 straight-line miles of this county's. It stands in for a service area, and it is rough for very large counties, which are common in the West. Los Angeles County's internal point is far enough north that its 30-mile reach counts only itself.</li>
+        <li><b>Age groups.</b> The survey's age groups, 65–74, 75–84 and 85+, are the ones Urban Institute reports its wealth, income and health metrics for, so every factor describes the same people: Census counts and Urban figures for the ages you pick. Each factor's label names the ages used. The Explore tab shows residents 75+ (75–84 plus 85+).</li>
         <li><b>Senior living communities and home care businesses.</b> Senior living is assisted living facilities for the elderly plus continuing care retirement communities. Home care is services for the elderly and persons with disabilities (mostly non-medical home care, with some adult day and other services) plus home health care. Both count locations with paid staff, not beds or clients, and leave out businesses Census lists statewide rather than in a county.</li>
         <li><b>Medicare Advantage share.</b> Medicare Advantage enrollees divided by everyone eligible for Medicare in the county, at all ages. CMS left out Alaska and Connecticut this month while their county codes are updated, and blanks counties with 10 or fewer enrollees.</li>
         <li><b>Metro and rural.</b> Question 4 uses USDA's Rural-Urban Continuum Codes. Metro counties are codes 1–3; rural and small-town counties are the nonmetro codes 4–9.</li>
@@ -750,7 +756,7 @@ dash.calc('factors', {
   description: 'Every factor the fit score can use: where it comes from, its unit and data year, and the age groups it is available for. "{age}" in a label is filled in with the age group used.',
   inputs: ['metric_info'],
   fn: (metric_info) => {
-    const AGES = '65+, 75+, 85+';
+    const AGES = '65-74, 75-84, 85+';
     const C = (id, label, unit, year, ages) => ({id, group: 'Older adults and reach (Census)', label, unit, source: 'Census', year, ages: ages || ''});
     const B = (id, label) => ({id, group: 'Senior living and home care (Census business counts)', label, unit: label.includes('per 1,000') ? 'per1k' : 'count', source: 'Census', year: '2023', ages: ''});
     const M = (id, label, unit) => ({id, group: 'Medicare (CMS)', label, unit, source: 'CMS', year: 'Nov 2026', ages: ''});
@@ -784,7 +790,7 @@ dash.calc('factors', {
 
 dash.calc('reach', {
   title: 'County reach, businesses and Medicare',
-  description: 'For each county: residents 65+, 75+ and 85+, senior living and home care businesses, and nursing homes in every county within 30 straight-line miles of its Census internal point; residents per square mile, their share and their growth since 2020; the Medicare Advantage share; and the USDA rural-urban code.',
+  description: 'For each county: residents 65–74, 75–84 and 85+ (plus 65+ and 75+), senior living and home care businesses, and nursing homes in every county within 30 straight-line miles of its Census internal point; residents per square mile, their share and their growth since 2020; the Medicare Advantage share; and the USDA rural-urban code.',
   inputs: ['counties', 'nursing_homes', 'businesses', 'medicare_advantage', 'rural_codes'],
   fn: (counties, nursing_homes, businesses, medicare_advantage, rural_codes) => {
     const nh = new Map(nursing_homes.map((r) => [r.geoid, r]));
@@ -796,15 +802,16 @@ dash.calc('reach', {
     const byLat = rows.slice().sort((a, b) => a.lat - b.lat);
     const lats = byLat.map((c) => c.lat);
     const start = (x) => { let lo = 0, hi = lats.length; while (lo < hi) { const m = (lo + hi) >> 1; if (lats[m] < x) lo = m + 1; else hi = m; } return lo; };
-    const ages = ['65', '75', '85'];
+    const ages = ['65_74', '75_84', '85plus', '65plus', '75plus'];  // field suffixes: Urban's bands, then 65+ and 75+
     const per = (n, c) => { if (!(c.land_sqmi > 0) || n == null) return null; const v = n / c.land_sqmi; return v < 10 ? Math.round(v * 10) / 10 : Math.round(v); };
     return rows.map((c) => {
-      const sums = {p65: 0, p75: 0, p85: 0, sl: 0, hc: 0, nh: 0};
+      const sums = {sl: 0, hc: 0, nh: 0};
+      ages.forEach((a) => { sums['p' + a] = 0; });
       for (let k = start(c.lat - dLat); k < byLat.length && byLat[k].lat <= c.lat + dLat; k++) {
         const o = byLat[k];
         const a = Math.sin(((o.lat - c.lat) * rad) / 2) ** 2 + Math.cos(c.lat * rad) * Math.cos(o.lat * rad) * Math.sin(((o.lon - c.lon) * rad) / 2) ** 2;
         if (2 * R * Math.asin(Math.min(1, Math.sqrt(a))) <= MILES) {
-          sums.p65 += o.pop_65plus || 0; sums.p75 += o.pop_75plus || 0; sums.p85 += o.pop_85plus || 0;
+          ages.forEach((a) => { sums['p' + a] += o['pop_' + a] || 0; });
           const b = biz.get(o.geoid) || {};
           sums.sl += b.senior_living || 0; sums.hc += b.home_care || 0;
           sums.nh += (nh.get(o.geoid) || {}).nh_count || 0;
@@ -826,12 +833,12 @@ dash.calc('reach', {
         nh_low_overall_pct: h.nh_low_overall_pct == null ? null : h.nh_low_overall_pct,
       };
       ages.forEach((a) => {
-        const n = c['pop_' + a + 'plus'], then = c['pop_' + a + 'plus_2020'];
-        row['residents_' + a + 'plus'] = n;
-        row['within30_' + a + 'plus'] = sums['p' + a];
-        row['per_sqmi_' + a + 'plus'] = per(n, c);
-        row['share_' + a + 'plus'] = c.population ? Math.round((n / c.population) * 1000) / 10 : null;
-        row['growth_' + a + 'plus'] = then ? Math.round((n / then - 1) * 1000) / 10 : null;
+        const n = c['pop_' + a], then = c['pop_' + a + '_2020'];
+        row['residents_' + a] = n;
+        row['within30_' + a] = sums['p' + a];
+        row['per_sqmi_' + a] = per(n, c);
+        row['share_' + a] = c.population && n != null ? Math.round((n / c.population) * 1000) / 10 : null;
+        row['growth_' + a] = then && n != null ? Math.round((n / then - 1) * 1000) / 10 : null;
       });
       return row;
     });
@@ -844,7 +851,10 @@ dash.calc('market', {
   inputs: ['factors', 'reach', 'metrics'],
   fn: (factors, reach, metrics) => {
     const p = dash.params();
-    const aud = ['65', '75', '85'].includes(String(p.aud)) ? String(p.aud) : '75';
+    // Urban's age bands; older links used 65 / 75 / 85.
+    const OLD = {'65': '65-74', '75': '75-84', '85': '85+'};
+    const aud = ['65-74', '75-84', '85+'].includes(String(p.aud)) ? String(p.aud) : OLD[String(p.aud)] || '75-84';
+    const suf = (a) => a.replace('+', 'plus').replace(/[^0-9a-z]/gi, '_');
     // The mix is "factor[@age][~low]:weight" items separated by commas; ~low means less is better.
     const items = String(p.mix || '').split(',').map((s) => {
       const m = s.trim().match(/^([a-z0-9_]+)(?:@([0-9+-]+))?(~low)?:([0-3])$/);
@@ -852,12 +862,8 @@ dash.calc('market', {
     }).filter((it) => it && it.weight > 0);
     const byId = new Map(factors.map((f) => [f.id, f]));
     const used = items.filter((it) => byId.has(it.id));
-    // Urban's closest reported age group to the audience age.
-    const urbanAge = (f) => {
-      const have = String(f.ages).split(', ');
-      const want = aud === '65' ? ['65+', '65-74'] : aud === '75' ? ['75-84'] : ['85+'];
-      return want.find((a) => have.includes(a)) || 'All';
-    };
+    // Urban's figure for the same age band, or all ages when Urban has none for it.
+    const urbanAge = (f) => (String(f.ages).split(', ').includes(aud) ? aud : 'All');
     const nwAge = byId.has('median_net_worth') ? urbanAge(byId.get('median_net_worth')) : 'All';
     const ages = new Set([nwAge, ...used.map((it) => it.age)]);
     const urban = new Map();
@@ -870,7 +876,7 @@ dash.calc('market', {
         const r = urban.get(c.geoid + '|' + it.age);
         return r && r[it.id] != null ? shown(r[it.id], f.unit) : null;
       }
-      const field = f.ages ? `${it.id}_${it.age.replace('+', '')}plus` : it.id;
+      const field = f.ages ? it.id + '_' + suf(it.age) : it.id;
       return c[field] == null ? null : c[field];
     };
     const pctFns = used.map((it) => {
@@ -889,8 +895,8 @@ dash.calc('market', {
       const row = {
         geoid: c.geoid, county: c.county, state: c.state, state_name: c.state_name, lat: c.lat, lon: c.lon,
         population: c.population, rucc: c.rucc, metro: c.metro, remote: c.remote,
-        residents: c['residents_' + aud + 'plus'], within30: c['within30_' + aud + 'plus'],
-        per_sqmi: c['per_sqmi_' + aud + 'plus'], growth: c['growth_' + aud + 'plus'],
+        residents: c['residents_' + suf(aud)], within30: c['within30_' + suf(aud)],
+        per_sqmi: c['per_sqmi_' + suf(aud)], growth: c['growth_' + suf(aud)],
         median_net_worth: nw && nw.median_net_worth != null ? Math.round(nw.median_net_worth) : null,
       };
       let sum = 0, wsum = 0, missingHigh = false;
@@ -931,13 +937,14 @@ dash.calc('ranked_market', {
 
 dash.calc('market_summary', {
   title: 'Ranking summary',
-  description: 'The best-fitting county, how many counties are ranked and score 80 or more, and residents in the chosen age group across the top 25.',
-  inputs: ['ranked_market'],
-  fn: (ranked_market) => {
+  description: 'The best-fitting county, how many counties are ranked and what share of all US counties that is, and residents in the chosen age group across the top 25.',
+  inputs: ['ranked_market', 'market'],
+  fn: (ranked_market, market) => {
     const top = ranked_market[0];
     return [{
       counties_ranked: ranked_market.length,
-      counties_80plus: ranked_market.filter((r) => r.score >= 80).length,
+      total_counties: market.length,
+      pct_ranked: market.length ? Math.round((ranked_market.length / market.length) * 100) : null,
       top25_residents: ranked_market.slice(0, 25).reduce((s, r) => s + (r.residents || 0), 0),
       top_geoid: top ? top.geoid : null,
       top_name: top ? `${top.county}, ${top.state}` : null,
@@ -1143,7 +1150,12 @@ window.AX = (() => {
   const mixString = (items) => items.map((it) => `${it.id}${it.age !== 'All' ? '@' + it.age : ''}${it.low ? '~low' : ''}:${it.weight}`).join(',');
   const mixItems = () => parseMix(dash.params().mix);
   const mixKey = (it) => it.id + (it.age !== 'All' ? '_' + it.age.replace('+', 'plus').replace(/[^0-9a-z]/gi, '_') : '');
-  const aud = () => (['65', '75', '85'].includes(String(dash.params().aud)) ? String(dash.params().aud) : '75');
+  // The age band the survey picked: Urban's 65-74, 75-84 or 85+ (older links used 65 / 75 / 85).
+  const aud = () => {
+    const a = String(dash.params().aud);
+    return ['65-74', '75-84', '85+'].includes(a) ? a : {'65': '65-74', '75': '75-84', '85': '85+'}[a] || '75-84';
+  };
+  const ageText = (a) => String(a).replace('-', '\u2013');
   const answers = () => {
     const p = dash.params();
     return {
@@ -1154,14 +1166,12 @@ window.AX = (() => {
       area: ['any', 'metro', 'rural'].includes(p.area) ? p.area : 'any',
     };
   };
-  // Urban's closest reported age group, as in the fit score calc; without the factor list, the usual groups.
+  // Urban's figure for the same age band, as in the fit score calc, or all ages when Urban has none for it.
   const urbanAge = (id, a) => {
     const fc = dash.data('factors');
     const f = fc.status === 'ok' ? fc.data.find((x) => x.id === id) : null;
-    const want = a === '65' ? ['65+', '65-74'] : a === '75' ? ['75-84'] : ['85+'];
-    if (!f) return want[want.length - 1];
-    const have = String(f.ages).split(', ');
-    return want.find((x) => have.includes(x)) || 'All';
+    if (!f) return a;
+    return String(f.ages).split(', ').includes(a) ? a : 'All';
   };
   const surveyMix = (ans) => {
     const items = [];
@@ -1169,7 +1179,7 @@ window.AX = (() => {
       const it = items.find((x) => x.id === id && x.age === age && x.low === Boolean(low));
       if (it) it.weight = Math.min(3, it.weight + weight); else items.push({id, age, low: Boolean(low), weight});
     };
-    const a = ans.aud, cen = a + '+';
+    const a = ans.aud, cen = a;
     const pay = new Set(ans.pay);
     if (pay.has('consumer')) { add('median_net_worth', urbanAge('median_net_worth', a), 2); add('median_income', urbanAge('median_income', a), 1); }
     if (pay.has('senior_living')) { add('sl_within30', 'All', 3); add('senior_living', 'All', 1); }
@@ -1187,7 +1197,7 @@ window.AX = (() => {
     return mixString(items);
   };
   const changed = () => mixString(mixItems()) !== mixString(parseMix(surveyMix(answers())));
-  const factorName = (f, it) => (f.label.includes('{age}') ? f.label.replace('{age}', it.age)
+  const factorName = (f, it) => (f.label.includes('{age}') ? f.label.replace('{age}', ageText(it.age))
     : f.label + (it.age !== 'All' ? ', ' + ageLabel(it.age).toLowerCase() : ''));
   const selectedGeoid = (ranked) => {
     const g = dash.params().county;
@@ -1195,17 +1205,17 @@ window.AX = (() => {
     return ranked[0] ? ranked[0].geoid : null;
   };
   const marketLines = (r, src) => {
-    const w = 'geoid=' + r.geoid, a = aud() + '+';
+    const w = 'geoid=' + r.geoid, a = ageText(aud());
     return [
       ['Fit score:', r.score == null ? 'no score' : String(r.score), src, 'score', w],
       [`Residents ${a}:`, num(r.residents), src, 'residents', w],
-      [`${a} within 30 miles:`, num(r.within30), src, 'within30', w],
-      [`${a} per sq mi:`, density(r.per_sqmi), src, 'per_sqmi', w],
+      [`Residents ${a} within 30 miles:`, num(r.within30), src, 'within30', w],
+      [`Residents ${a} per sq mi:`, density(r.per_sqmi), src, 'per_sqmi', w],
     ];
   };
   return {
     WEIGHT, shares, PAYERS, UNIT, info, ages, age, ageLabel, unitText, lc, fmt, tick, density, pctText, num, c0, seq, mark, empty, statusOf,
-    showTip, interact, shapesById, shapeMap, parseMix, mixString, mixItems, mixKey, aud, answers, urbanAge, surveyMix, changed, factorName,
+    showTip, interact, shapesById, shapeMap, parseMix, mixString, mixItems, mixKey, aud, ageText, answers, urbanAge, surveyMix, changed, factorName,
     selectedGeoid, marketLines, search: '', mlarge: false,
   };
 })();
@@ -1277,7 +1287,7 @@ document.querySelectorAll('#lm-floor').forEach((s) => {
 document.querySelectorAll('#lm-large').forEach((box) => {
   box.addEventListener('change', () => { window.AX.mlarge = box.checked; dash.draw('market-body'); });
 });
-dash.draw('age-label', (el) => { el.textContent = AX.aud() + '+'; });
+dash.draw('age-label', (el) => { el.textContent = AX.ageText(AX.aud()); });
 
 dash.draw('state-select', (sel) => {
   const c = dash.data('counties');
@@ -1404,7 +1414,7 @@ dash.draw('recipe', {
       asel.replaceChildren(...list.map((a) => new Option(AX.ageLabel(a), a)));
       if (f && f.ages) {
         const a = AX.aud();
-        const pref = f.source === 'Urban Institute' ? AX.urbanAge(f.id, a) : a + '+';
+        const pref = f.source === 'Urban Institute' ? AX.urbanAge(f.id, a) : a;
         if (list.includes(pref)) asel.value = pref;
       }
       ageField.hidden = list.length < 2;
@@ -1496,21 +1506,6 @@ dash.draw('county-results', (box) => {
 })();
 
 /* ---------- Launch market: takeaway and tiles ---------- */
-const REACH_PHRASE = {home: 'at home', site: 'at a place they come to', remote: 'remotely'};
-const AREA_PHRASE = {any: '', metro: ' in metro counties', rural: ' in rural and small-town counties'};
-dash.draw('mt-model', (el) => {
-  const ans = AX.answers();
-  const names = ans.pay.map((k) => (k === 'medicare' && ans.medicare === 'ma' ? 'Medicare Advantage plans'
-    : k === 'medicare' && ans.medicare === 'traditional' ? 'traditional Medicare' : AX.PAYERS[k]));
-  const list = names.length < 3 ? names.join(' and ') : names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1];
-  el.textContent = `a company${names.length ? ' paid by ' + list + ',' : ''} serving adults ${ans.aud}+ ${REACH_PHRASE[ans.reach]}${AREA_PHRASE[ans.area]}${AX.changed() ? ', with your changes' : ''}`;
-});
-dash.draw('mt-where', (el) => {
-  const st = dash.params().state;
-  const c = dash.data('counties');
-  const row = st && c.status === 'ok' ? c.data.find((r) => r.state === st) : null;
-  el.textContent = row ? ' in ' + row.state_name : '';
-});
 const msNum = (name, field, show) => dash.draw(name, (el) => {
   const s = dash.data('market_summary');
   if (s.status === 'loading') { el.textContent = '—'; return; }
@@ -1523,7 +1518,8 @@ msNum('mt-score', 'top_score', (v) => String(v));
 msNum('mt-older', 'top_residents', (v) => AX.num(v));
 msNum('mt-reach', 'top_within30', (v) => AX.num(v));
 msNum('mk-n', 'counties_ranked', (v) => AX.num(v));
-msNum('mk-80', 'counties_80plus', (v) => AX.num(v));
+msNum('mk-pct', 'pct_ranked', (v) => String(v));
+msNum('mk-total', 'total_counties', (v) => AX.num(v));
 msNum('mk-top25', 'top25_residents', (v) => AX.num(v));
 
 /* ---------- Launch market: map, profile, scatter, table ---------- */
@@ -1560,7 +1556,7 @@ dash.draw('profile', (el) => {
   const r = g && m.data.find((d) => d.geoid === g);
   if (!r) { el.replaceChildren(AX.mark('p', 'No county meets these filters. Try another state or a lower minimum.')); return; }
   const where = 'geoid=' + r.geoid;
-  const a = AX.aud() + '+';
+  const a = AX.ageText(AX.aud());
   const rankRow = rk.data.find((d) => d.geoid === r.geoid);
   const head = document.createElement('div');
   head.className = 'lm-prof-head';
@@ -1585,9 +1581,9 @@ dash.draw('profile', (el) => {
   facts.className = 'lm-facts';
   [
     [`Residents ${a}`, AX.num(r.residents), 'residents'],
-    [`${a} within 30 miles`, AX.num(r.within30), 'within30'],
-    [`${a} per square mile`, AX.density(r.per_sqmi), 'per_sqmi'],
-    [`${a} growth since 2020`, AX.pctText(r.growth), 'growth'],
+    [`Residents ${a} within 30 miles`, AX.num(r.within30), 'within30'],
+    [`Residents ${a} per square mile`, AX.density(r.per_sqmi), 'per_sqmi'],
+    [`Growth in residents ${a} since 2020`, AX.pctText(r.growth), 'growth'],
     ['Population', AX.num(r.population), 'population'],
     [`Median net worth, ${AX.ageLabel(nwAge).toLowerCase()}`, r.median_net_worth == null ? 'no data' : '$' + AX.num(r.median_net_worth), 'median_net_worth'],
   ].forEach(([label, text, field]) => {
@@ -1659,7 +1655,7 @@ const marketColumns = () => {
   const has = (id, age) => items.some((it) => it.id === id && it.age === age);
   const fixed = [
     has('population', 'All') ? null : {field: 'population', label: 'Population', fmt: (v) => (v == null ? '' : AX.num(v)), num: true},
-    has('residents', a + '+') ? null : {field: 'residents', label: `Residents ${a}+`, fmt: (v) => (v == null ? '' : AX.num(v)), num: true},
+    has('residents', a) ? null : {field: 'residents', label: `Residents ${AX.ageText(a)}`, fmt: (v) => (v == null ? '' : AX.num(v)), num: true},
     has('median_net_worth', nwAge) ? null : {field: 'median_net_worth', label: `Median net worth, ${AX.ageLabel(nwAge).toLowerCase()}`, fmt: (v) => (v == null ? '' : '$' + AX.num(v)), num: true},
   ].filter(Boolean);
   return [
