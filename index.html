@@ -156,11 +156,11 @@ a { color: var(--accent); }
 .ax-intro { margin: 0; color: var(--color-fg-muted); line-height: 1.5; }
 .ax-lede { margin: 0; line-height: 1.55; }
 .ax-lede b { font-weight: var(--cds-font-weight-medium); }
-.ax-controls { display: flex; flex-wrap: wrap; gap: var(--cds-gap-md); align-items: flex-end; }
-.ax-field { display: grid; gap: var(--cds-gap-xs); min-width: 0; max-width: 100%; }
+.ax-controls { display: flex; flex-wrap: wrap; gap: var(--cds-gap-md); align-items: flex-end; min-width: 0; max-width: 100%; }
+.ax-field { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--cds-gap-xs); min-width: 0; max-width: 100%; }
 .ax-field label { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
 .ax-field .dash-select { max-width: 100%; }
-.ax-field-metric .dash-select { width: 24rem; }
+.ax-field-metric .dash-select { width: 24rem; max-width: 100%; }  /* shrinks on a phone */
 .ax-meta { flex-basis: 100%; margin: 0; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
 .ax-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: var(--cds-gap-md); }
 .ax-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); min-width: 0; display: grid; gap: var(--cds-gap-md); align-content: start; }
@@ -187,6 +187,8 @@ a { color: var(--accent); }
 .ax-legend span { display: inline-flex; align-items: center; gap: 6px; }
 .ax-sw { width: 12px; height: 12px; border-radius: 50%; flex: none; }
 .ax-sw-empty { background-color: var(--color-panel); box-shadow: inset 0 0 0 1.5px var(--color-border-line); }
+/* Hidden means hidden, even for elements whose class sets a display (like the grid tooltip). */
+[hidden] { display: none !important; }
 .ax-tip { position: absolute; z-index: 2; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); box-shadow: var(--cds-shadow-popover); border-radius: var(--cds-radius); padding: var(--cds-pad-sm) var(--cds-pad-md); font-size: var(--cds-font-size-caption); line-height: 1.45; max-width: 260px; display: grid; gap: 2px; }
 .ax-tip strong { font-weight: var(--cds-font-weight-medium); color: var(--color-fg); }
 .ax-tip .ax-tip-row { color: var(--cds-text-secondary); }
@@ -224,6 +226,9 @@ a { color: var(--accent); }
 .lm-survey { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: var(--cds-gap-sm); align-items: stretch; }
 .lm-q { padding: var(--cds-pad-md); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background-color: var(--color-panel); display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 .lm-q[hidden] { display: none; }
+.lm-q-foot { margin: auto 0 0; padding-top: 6px; font-size: var(--cds-font-size-caption); line-height: 1.4; color: var(--color-fg-muted); }
+.lm-fn-mark { font-size: 0.75em; line-height: 0; margin-left: 1px; }
+.lm-fn-mark a { color: inherit; text-decoration: none; }
 .lm-q-title { margin: 0 0 2px; font-weight: var(--cds-font-weight-medium); line-height: 1.35; min-height: 2.7em; }
 
 .lm-opt { display: flex; gap: 8px; align-items: flex-start; cursor: pointer; line-height: 1.35; }
@@ -240,6 +245,10 @@ a { color: var(--accent); }
 .lm-score-list li b { font-weight: var(--cds-font-weight-medium); }
 .lm-score-list .lm-score-meta { color: var(--color-fg-muted); }
 .lm-score .lm-recipe { padding: 0; border: 0; background-color: transparent; }
+/* Reads as a link, not as one more factor in the list above it. */
+.lm-score .lm-recipe > summary { color: var(--accent, var(--series-1)); font-size: 0.875rem; width: fit-content; }
+.lm-score .lm-recipe > summary .lm-sum-label { font-weight: var(--cds-font-weight-medium); }
+.lm-score .lm-recipe > summary:hover .lm-sum-label { text-decoration: underline; text-underline-offset: 3px; }
 .lm-table-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--cds-gap-sm) var(--cds-gap-md); }
 .lm-table-actions .lm-btn { font-size: var(--cds-font-size-body); padding: 7px 14px; }
 .lm-download-msg { flex-basis: 100%; margin: 0; text-align: right; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
@@ -247,6 +256,7 @@ a { color: var(--accent); }
 .lm-recipe > summary { cursor: pointer; line-height: 1.5; }
 .lm-recipe > summary .lm-sum-label { font-weight: var(--cds-font-weight-medium); }
 .lm-recipe > summary .lm-sum-list { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.lm-recipe-lead { color: var(--color-fg); }
 .lm-recipe-body { display: grid; gap: var(--cds-gap-md); margin-top: var(--cds-gap-md); }
 .lm-items { display: grid; gap: var(--cds-gap-sm); }
 .lm-item { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cds-gap-sm) var(--cds-gap-md); padding-block: 6px; border-bottom: 1px solid var(--color-border-line); }
@@ -257,7 +267,7 @@ a { color: var(--accent); }
 .lm-btn { font: inherit; font-size: var(--cds-font-size-caption); color: var(--color-fg); background-color: transparent; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: 5px 10px; cursor: pointer; }
 .lm-btn:hover { border-color: var(--color-fg-muted); }
 .lm-btn-primary { background-color: var(--color-fg); color: var(--color-bg); border-color: var(--color-fg); }
-.lm-add { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); align-items: flex-end; }
+.lm-add { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); align-items: flex-end; margin-top: var(--cds-gap-md); }
 .lm-add-title { flex-basis: 100%; margin: 0; font-weight: var(--cds-font-weight-medium); }
 .lm-add .ax-field-factor .dash-select { width: 18rem; }
 .lm-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--cds-gap-lg); }
@@ -282,8 +292,10 @@ a { color: var(--accent); }
 .lm-fx-meta { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); font-variant-numeric: tabular-nums; }
 .lm-map-tools { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--cds-gap-md) var(--cds-gap-lg); }
 .lm-scope { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cds-gap-sm) var(--cds-gap-md); }
-.lm-scope label { font-weight: var(--cds-font-weight-medium); }
-.lm-scope .dash-select { min-width: 12rem; max-width: 100%; }
+/* One sentence: "Show counties in [state] with [at least 1,000] residents 75–84". */
+.lm-scope { font-weight: var(--cds-font-weight-medium); }
+.lm-scope #lm-state { min-width: 12rem; max-width: 100%; }
+.lm-scope .dash-select { font-weight: 400; max-width: 100%; }
 .lm-county-search { position: relative; display: grid; gap: var(--cds-gap-xs); max-width: 24rem; flex: 1 1 16rem; }
 .lm-county-search .ax-input { width: 100%; }
 .lm-county-results { position: absolute; top: 100%; left: 0; right: 0; z-index: 5; margin-top: 4px; display: grid; max-height: 18rem; overflow-y: auto; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); box-shadow: var(--cds-shadow-popover); border-radius: var(--cds-radius); }
@@ -326,12 +338,12 @@ a { color: var(--accent); }
       <h2 class="lm-step-title" id="survey-title">Tell us about your company</h2>
       <div class="lm-survey" id="survey">
         <div class="lm-q" id="q-pay" role="radiogroup" aria-labelledby="q-pay-title">
-          <p class="lm-q-title" id="q-pay-title">1. Who pays for your solution?</p>
+          <p class="lm-q-title" id="q-pay-title">1. Who pays for your solution?<sup class="lm-fn-mark"><a href="#fn-medicaid" aria-label="Note about Medicaid">*</a></sup></p>
           <label class="lm-opt"><input type="radio" name="pay" value="consumer" id="pay-consumer"><span>Older adults or their families</span></label>
           <label class="lm-opt"><input type="radio" name="pay" value="senior_living" id="pay-senior_living"><span>Senior living communities</span></label>
           <label class="lm-opt"><input type="radio" name="pay" value="home_care" id="pay-home_care"><span>Home care agencies</span></label>
           <label class="lm-opt"><input type="radio" name="pay" value="medicare" id="pay-medicare"><span>Medicare</span></label>
-          <label class="lm-opt"><input type="radio" name="pay" value="medicaid" id="pay-medicaid"><span>Medicaid</span></label>
+          <p class="lm-q-foot" id="fn-medicaid">* Medicaid isn't an option here because each state sets its own rules on who qualifies and what it pays for, and county data can't see that.</p>
         </div>
         <div class="lm-q" id="q-aud" role="radiogroup" aria-labelledby="q-aud-title">
           <p class="lm-q-title" id="q-aud-title">2. Who is it mainly for?</p>
@@ -366,20 +378,29 @@ a { color: var(--accent); }
     <div class="ax lm-results" id="results" hidden>
     <section class="lm-step lm-score" id="score-step" aria-labelledby="score-title">
       <h2 class="lm-step-title" id="score-title">Your custom market score</h2>
-      <p class="ax-desc lm-score-intro">Every US county gets a score from 0 to 100, built from the factors below. Each factor's percentage is its share of the score.</p>
+      <p class="ax-desc lm-score-intro">Every US county gets a score from 0 to 100, built from the factors below. The percentage next to each factor is its share of the score.</p>
       <ul class="lm-score-list" data-draw="score-bullets" data-source="factors"></ul>
+      <p class="ax-desc lm-recipe-lead">Your answers set a starting point. There are 55 factors in all under "Add a factor", from nursing home staffing and senior living supply to medical debt and avoidable hospitalizations, and the right mix depends on exactly what your product does and who it serves.</p>
       <details class="lm-recipe" id="recipe">
         <summary><span class="lm-sum-label">Change weights or add a factor</span></summary>
         <div class="lm-recipe-body">
-          <p class="ax-desc">Low counts once (1&times;), Medium twice (2&times;) and High three times (3&times;). A county's score is the weighted average of its percentile on each factor, compared with every US county. "Less is better" flips a factor, so a county with a low value earns a high percentile.</p>
+          <p class="ax-desc">Low counts once (1&times;), Medium twice (2&times;), and High three times (3&times;). A county's score is the weighted average of its percentile on each factor, compared with every US county. "Less is better" flips a factor, so a county with a low value earns a high percentile.</p>
           <div data-draw="recipe" data-source="factors"></div>
         </div>
       </details>
     </section>
 
-    <div class="lm-scope" id="scope-row">
+    <div class="lm-scope" id="scope-row" role="group" aria-label="Which counties to show">
       <label for="lm-state">Show counties in</label>
       <select id="lm-state" class="dash-select" data-draw="state-select" data-source="counties"></select>
+      <label for="lm-floor">with</label>
+      <select id="lm-floor" class="dash-select" aria-describedby="lm-floor-age">
+        <option value="0">any number of</option>
+        <option value="1000">at least 1,000</option>
+        <option value="5000">at least 5,000</option>
+        <option value="25000">at least 25,000</option>
+      </select>
+      <span id="lm-floor-age">residents <span data-draw="age-label">—</span></span>
     </div>
 
     <section class="ax-kpis" id="market-kpis" aria-label="Summary of the ranking">
@@ -397,32 +418,23 @@ a { color: var(--accent); }
 
     <div class="lm-grid">
       <section class="ax-card" id="market-map-card">
+        <div class="ax-card-head">
+          <h2 id="market-map-title">Fit score by county</h2>
+          <p class="ax-desc">Each county is colored by its fit score, from red for a poor fit to green for a strong fit. Outlined, uncolored counties aren't ranked. Click a county to see why it scores what it does.</p>
+        </div>
         <div class="lm-map-tools" id="map-tools">
           <div class="ax-field lm-county-search" id="county-search">
             <label for="lm-county">Find a county</label>
             <input id="lm-county" class="ax-input" type="search" placeholder="Start typing, e.g. Nassau" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="lm-county-results">
             <div class="lm-county-results" id="lm-county-results" role="listbox" aria-label="Matching counties" data-draw="county-results" data-source="ranked_market"></div>
           </div>
-          <div class="ax-field">
-            <label for="lm-floor">Minimum residents <span data-draw="age-label">—</span> per county</label>
-            <select id="lm-floor" class="dash-select">
-              <option value="0">Any number</option>
-              <option value="1000">1,000 or more</option>
-              <option value="5000">5,000 or more</option>
-              <option value="25000">25,000 or more</option>
-            </select>
-          </div>
-        </div>
-        <div class="ax-card-head">
-          <h2 id="market-map-title">Fit score by county</h2>
-          <p class="ax-desc">Each county is colored by its fit score, from red for a poor fit to green for a strong fit; the legend gives each band's scores. Outlined, uncolored counties aren't ranked. Click a county to see why it scores what it does.</p>
         </div>
         <div class="ax-chart ax-map" data-draw="market-map" data-source="market ranked_market county_shapes"></div>
       </section>
       <section class="ax-card" id="profile-card">
         <div class="ax-card-head">
           <h2 id="profile-title">Why this county scores what it does</h2>
-          <p class="ax-desc">Points are the county's percentile on each factor, from 0 to 100. Click any county on the map or in the table, or find it by name above the map.</p>
+          <p class="ax-desc">Points are the county's percentile on each factor, from 0 to 100. Click any county on the map or in the table, or search for it by name above the map.</p>
         </div>
         <div class="lm-profile" data-draw="profile" data-source="market ranked_market factors"></div>
       </section>
@@ -432,7 +444,7 @@ a { color: var(--accent); }
       <div class="ax-card-head ax-card-head-row">
         <div>
           <h2 id="market-ranking-title">Best-fitting counties</h2>
-          <p class="ax-desc">The top 25 by fit score are shown, with each factor's value; the bar under a value shows its points. Rank is the county's place among all ranked counties. Click a row to see why it scores what it does.</p>
+          <p class="ax-desc">The table shows the top 25 by fit score, with each factor's value. The bar under a value shows its points. Rank is the county's place among all ranked counties, even when you show only the largest markets. Click a row to see why a county scores what it does.</p>
         </div>
         <div class="lm-table-actions">
           <label class="lm-opt lm-large" for="lm-large"><input type="checkbox" id="lm-large"><span><b>Only the 100 largest markets</b><small>the 100 counties with the most residents <span data-draw="age-label">—</span>, still sorted by fit score</small></span></label>
@@ -486,7 +498,7 @@ a { color: var(--accent); }
     <section class="ax-card" id="map-card">
       <div class="ax-card-head">
         <h2 id="map-title">Map of <span data-draw="metric-phrase">—</span></h2>
-        <p class="ax-desc">Each county is colored by the metric, split into five groups of about equal size; the stronger the color, the higher the value. Outlined, uncolored counties have no data.</p>
+        <p class="ax-desc">Each county is colored by the metric, in five groups of about equal size. The stronger the color, the higher the value. Outlined, uncolored counties have no data.</p>
       </div>
       <div class="ax-chart ax-map" data-draw="map" data-source="view county_shapes"></div>
     </section>
@@ -523,7 +535,7 @@ a { color: var(--accent); }
       <div class="ax-card-head ax-card-head-row">
         <div>
           <h2 id="ranking-title">Counties ranked by <span data-draw="metric-phrase">—</span></h2>
-          <p class="ax-desc">The top 25 are shown. Search to find any county in the ranking.</p>
+          <p class="ax-desc">The table shows the top 25. Search to find any county in the ranking.</p>
         </div>
         <div class="ax-table-controls">
           <div class="ax-field">
@@ -573,18 +585,20 @@ a { color: var(--accent); }
     <section class="ax-card" id="about-score">
       <h2 id="about-score-title">How the fit score works</h2>
       <ol class="lm-about-list">
-        <li>Your answers pick the factors that matter for your company and how much each one counts: Low counts once (1&times;), Medium twice (2&times;) and High three times (3&times;). A factor's share of the score is its weight divided by the total. For example, one High, two Medium and one Low factor add up to 8, so the High factor is 3 of 8, or 38% of the score. You can change them under "Change weights or add a factor".</li>
+        <li>Your answers pick the factors that matter for your company and how much each one counts: Low counts once (1&times;), Medium twice (2&times;), and High three times (3&times;). A factor's share of the score is its weight divided by the total. For example, one High, two Medium, and one Low factor add up to 8, so the High factor is 3 of 8, or <b>38%</b> of the score. You can change any of this under "Change weights or add a factor".</li>
         <li>For each factor, every US county gets a percentile from 0 to 100: where it stands against every other county. Where less is better, such as few annual wellness visits, the percentile is flipped.</li>
         <li>The fit score is the weighted average of those percentiles. A county needs data on every High (3&times;) factor, and on at least two-thirds of the weight overall, to get a score. When a lower-weight factor has no data, the score uses the others, and the county's profile says which one is missing.</li>
-        <li>The state, size and metro or rural choices narrow the ranking. They don't change any county's score, so a 90 means the same in every view.</li>
+        <li>The filters (state, minimum residents, and metro or rural) narrow the ranking. They don't change any county's score, so a 90 means the same thing in every view.</li>
       </ol>
     </section>
 
     <section class="ax-card" id="about-calc">
       <h2 id="about-calc-title">How each number is calculated</h2>
       <ul class="lm-about-notes">
-        <li><b>Within 30 miles.</b> Census gives each county an "internal point", a spot inside it near its geographic center. A county's 30-mile total adds up every county whose internal point is within 30 straight-line miles of its own, itself included. Each of those counties counts in full, and a county just past 30 miles counts not at all. The total crosses state lines even when you show one state: Bergen County, NJ, adds up 14 counties in New Jersey and New York, Manhattan included. Senior living communities, home care businesses and nursing homes within 30 miles are counted the same way. It stands in for a service area: distance as the crow flies, not driving time, and rough for very large counties. Los Angeles County's 30-mile total counts only itself, as do 519 of the 3,144 counties.</li>
-        <li><b>Per square mile.</b> The county's residents in the age group divided by its land area in square miles, water left out. It covers the county alone, not the 30-mile area, and averages over all of its land, so big counties with empty stretches look sparse: San Bernardino County, CA, has 97,162 residents 75–84 but 4.8 per square mile across 20,068 square miles.</li>
+        <li><b>Where the 30-mile circle starts.</b> Each county's circle starts at its center of population: the average location of everyone who lives there, from the 2020 Census. I use these instead of geographic centers so the circle starts where people live. San Bernardino County's center of population sits about 80 miles from the middle of its land, among the cities of its southwest corner rather than out in the Mojave Desert. Connecticut's planning regions are newer than the 2020 centers, so they use a Census point near each region's middle.</li>
+        <li><b>Within 30 miles.</b> A county's 30-mile total adds up every county whose center is within 30 straight-line miles of its own, itself included. Each of those counties counts in full, and one just past 30 miles counts not at all. The total crosses state lines even when you show one state: Bergen County, NJ, adds up 14 counties in New Jersey and New York, Manhattan included. Senior living communities, home care businesses, and nursing homes within 30 miles are counted the same way.</li>
+        <li><b>The catch is county size.</b> Los Angeles County's center is 32 miles from Orange County's, so its 30-mile total counts only itself, as do 342 of the 3,144 counties. Treat the total as a rough service area: distance as the crow flies, not driving time.</li>
+        <li><b>Per square mile.</b> Residents in the age group divided by the county's land area, water left out. It covers the county alone and averages over all of its land, so big counties with empty stretches look sparse: San Bernardino County has <b>97,162</b> residents 75–84 but only 4.8 per square mile across 20,068 square miles.</li>
         <li><b>Share of residents.</b> Residents in the age group divided by the county's total population, both on July 1, 2025.</li>
         <li><b>Growth since 2020.</b> The percent change in residents in the age group from July 1, 2020, to July 1, 2025, both from the same Census estimates release, so the two years are comparable.</li>
         <li><b>Percentiles.</b> A county's percentile on a factor compares it with every US county that has data on that factor, whatever state or filters you pick. The lowest value gets 0 and the highest 100, and counties with the same value share the percentile in the middle of their group.</li>
@@ -602,13 +616,14 @@ a { color: var(--accent); }
             <tr><th>Source</th><th>Data year</th><th>What it adds</th></tr>
           </thead>
           <tbody>
-            <tr><td><a href="https://datacatalog.urban.org/dataset/metrics-data-aging-opportunity-dashboard" target="_blank" rel="noopener">Urban Institute, Metrics Data for the Aging Opportunity Dashboard, released November 2026</a></td><td>2021 to 2025, varies by metric</td><td>Income, net worth, savings, debt, poverty, health care use, long-term care quality and mortality, by age group</td></tr>
-            <tr><td><a href="https://www.census.gov/data/datasets/time-series/demo/popest/2020s-counties-detail.html" target="_blank" rel="noopener">U.S. Census Bureau, county population estimates</a></td><td>July 1, 2025, and 2020 for growth</td><td>Residents 65–74, 75–84 and 85+ (75+ on the Explore tab), total population, and growth since 2020</td></tr>
-            <tr><td><a href="https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.html" target="_blank" rel="noopener">U.S. Census Bureau, 2025 Gazetteer</a></td><td>2025</td><td>Land area and each county's location, for density and the 30-mile reach</td></tr>
+            <tr><td><a href="https://datacatalog.urban.org/dataset/metrics-data-aging-opportunity-dashboard" target="_blank" rel="noopener">Urban Institute, Metrics Data for the Aging Opportunity Dashboard, released November 2026</a></td><td>2021 to 2025, varies by metric</td><td>Income, net worth, savings, debt, poverty, healthcare use, long-term care quality, and mortality, by age group</td></tr>
+            <tr><td><a href="https://www.census.gov/data/datasets/time-series/demo/popest/2020s-counties-detail.html" target="_blank" rel="noopener">U.S. Census Bureau, county population estimates</a></td><td>July 1, 2025, and 2020 for growth</td><td>Residents 65–74, 75–84, and 85+ (75+ on the Explore tab), total population, and growth since 2020</td></tr>
+            <tr><td><a href="https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.html" target="_blank" rel="noopener">U.S. Census Bureau, 2025 Gazetteer</a></td><td>2025</td><td>Land area, for density, and a location for each Connecticut planning region</td></tr>
+            <tr><td><a href="https://www.census.gov/geographies/reference-files/time-series/geo/centers-population.html" target="_blank" rel="noopener">U.S. Census Bureau, 2020 centers of population</a></td><td>2020</td><td>Where each county's residents live on average, the starting point for the 30-mile totals</td></tr>
             <tr><td><a href="https://www.census.gov/geographies/mapping-files/time-series/geo/cartographic-boundary.html" target="_blank" rel="noopener">U.S. Census Bureau, cartographic boundary file for counties</a></td><td>2024</td><td>County outlines for the maps</td></tr>
             <tr><td><a href="https://www.census.gov/programs-surveys/cbp.html" target="_blank" rel="noopener">U.S. Census Bureau, County Business Patterns</a></td><td>2023</td><td>Senior living communities and home care businesses</td></tr>
             <tr><td><a href="https://www.cms.gov/data-research/statistics-trends-and-reports/medicare-advantagepart-d-contract-and-enrollment-data/ma-state/county-penetration" target="_blank" rel="noopener">CMS, Medicare Advantage State/County Penetration</a></td><td>November 2026</td><td>Share of people eligible for Medicare who are in Medicare Advantage</td></tr>
-            <tr><td><a href="https://data.cms.gov/provider-data/dataset/4pq5-n9py" target="_blank" rel="noopener">CMS, Nursing Home Provider Information</a></td><td>October 2026</td><td>Nursing homes, beds, star ratings and staff turnover, available under "Add a factor"</td></tr>
+            <tr><td><a href="https://data.cms.gov/provider-data/dataset/4pq5-n9py" target="_blank" rel="noopener">CMS, Nursing Home Provider Information</a></td><td>October 2026</td><td>Nursing homes, beds, star ratings, and staff turnover, available under "Add a factor"</td></tr>
             <tr><td><a href="https://www.ers.usda.gov/data-products/rural-urban-continuum-codes" target="_blank" rel="noopener">USDA Economic Research Service, Rural-Urban Continuum Codes</a></td><td>2023</td><td>Which counties are metro and which are rural or small-town, for question 4</td></tr>
           </tbody>
         </table>
@@ -619,15 +634,14 @@ a { color: var(--accent); }
     <section class="ax-card" id="about-terms">
       <h2 id="about-terms-title">Definitions and gaps</h2>
       <ul class="lm-about-notes">
-        <li><b>A shortlist, not an answer.</b> The fit score ranks counties against each other on the factors your answers set. It doesn't measure competition, regulation or real demand for a product, which this data doesn't cover.</li>
-        <li><b>Age groups.</b> The survey's age groups, 65–74, 75–84 and 85+, are the ones Urban Institute reports its wealth, income and health metrics for, so every factor describes the same people: Census counts and Urban figures for the ages you pick. Each factor's label names the ages used. The Explore tab shows residents 75+ (75–84 plus 85+).</li>
-        <li><b>Senior living communities and home care businesses.</b> Senior living is assisted living facilities for the elderly plus continuing care retirement communities. Home care is services for the elderly and persons with disabilities (mostly non-medical home care, with some adult day and other services) plus home health care. Both count locations with paid staff, not beds or clients, and leave out businesses Census lists statewide rather than in a county.</li>
-        <li><b>Medicare Advantage share.</b> Medicare Advantage enrollees divided by everyone eligible for Medicare in the county, at all ages. CMS left out Alaska and Connecticut this month while their county codes are updated, and blanks counties with 10 or fewer enrollees.</li>
-        <li><b>Metro and rural.</b> Question 4 uses USDA's Rural-Urban Continuum Codes. Metro counties are codes 1–3; rural and small-town counties are the nonmetro codes 4–9.</li>
-        <li><b>Medicaid.</b> Eligibility and home-care programs vary by state, and this data doesn't cover them. The poverty rate stands in for how many older adults may qualify.</li>
-        <li><b>Repeated values.</b> Many employment, wealth and debt figures repeat exactly across neighboring counties; four Colorado mountain counties share one median net worth, for example. That suggests Urban estimated those metrics for groups of counties, so treat differences between small neighboring counties with care.</li>
-        <li><b>Connecticut.</b> Appears only for Census, CMS nursing home, business and employment and wealth figures. Urban reports Connecticut's other metrics for its former eight counties, which Census no longer publishes population or area for.</li>
-        <li><b>Labels.</b> "Share employed" is labeled "NA" in Urban's file; it is the one employment metric in Urban's data dictionary with no other name in the file. Two misspelled labels are corrected: depressive symptoms and pneumococcal vaccine.</li>
+        <li><b>Age groups.</b> The survey uses Urban Institute's own age groups (65–74, 75–84, and 85+), so every factor describes the same people: Census counts and Urban's money and health figures for the ages you pick. Each factor's label names the ages it uses. The Explore tab shows residents 75+ (75–84 plus 85+).</li>
+        <li><b>Senior living communities and home care businesses.</b> Senior living combines two Census business categories: assisted living facilities and continuing care retirement communities. Home care combines non-medical services for older adults and people with disabilities (which also takes in some adult day programs) with home health services. Both count business locations with paid staff, so a 200-unit community and a 20-unit one each count once. Businesses that Census lists only statewide are left out.</li>
+        <li><b>Medicare Advantage share.</b> Medicare Advantage enrollees divided by everyone eligible for Medicare in the county, at all ages. The November 2026 CMS file leaves out Alaska and Connecticut while their county codes are updated, and blanks counties with 10 or fewer enrollees.</li>
+        <li><b>Metro and rural.</b> Question 4 uses USDA's Rural-Urban Continuum Codes. Metro counties are codes 1–3, and rural and small-town counties are the nonmetro codes 4–9.</li>
+        <li><b>Why Medicaid isn't a payer option.</b> Medicaid is run state by state. Each state sets who qualifies, which home and community services it covers, whether managed care plans run long-term care, and what it pays. None of that shows up in county data, so a county could score well in a state that doesn't pay for your service at all. The older-adult poverty rate, which shows where people might qualify, is still available under "Add a factor".</li>
+        <li><b>Repeated values.</b> Many employment, wealth, and debt figures repeat exactly across neighboring counties. Four Colorado mountain counties share one median net worth, for example. My read is that Urban estimated those metrics for groups of counties, so treat differences between small neighboring counties with care.</li>
+        <li><b>Connecticut.</b> Connecticut's planning regions have Census, CMS nursing home, business, employment, and wealth figures. Urban reports the state's other metrics for its former eight counties, which Census no longer publishes population or area for, so those metrics are blank for Connecticut.</li>
+        <li><b>Labels.</b> "Share employed" is labeled "NA" in Urban's file. It's the one employment metric in Urban's data dictionary with no other name in the file. I also corrected two misspelled labels: depressive symptoms and pneumococcal vaccine.</li>
       </ul>
     </section>
   </section>
@@ -783,14 +797,14 @@ dash.calc('factors', {
       N('nh_low_staffing_pct', 'Homes with a 1–2 star staffing rating', 'pct'),
       N('nh_turnover_median', 'Nursing staff turnover, median home', 'pct'),
       N('nh_low_overall_pct', 'Homes rated 1–2 stars overall', 'pct'),
-      ...metric_info.map((m) => ({id: m.id, group: m.category + ' (Urban Institute)', label: m.label, unit: m.unit, source: 'Urban Institute', year: m.year, ages: m.ages})),
+      ...metric_info.map((m) => ({id: m.id, group: String(m.category).replace('Health care', 'Healthcare') + ' (Urban Institute)', label: m.label, unit: m.unit, source: 'Urban Institute', year: m.year, ages: m.ages})),
     ];
   },
 });
 
 dash.calc('reach', {
   title: 'County reach, businesses and Medicare',
-  description: 'For each county: residents 65–74, 75–84 and 85+ (plus 65+ and 75+), senior living and home care businesses, and nursing homes in every county within 30 straight-line miles of its Census internal point; residents per square mile, their share and their growth since 2020; the Medicare Advantage share; and the USDA rural-urban code.',
+  description: 'For each county: residents 65–74, 75–84 and 85+ (plus 65+ and 75+), senior living and home care businesses, and nursing homes in every county whose 2020 population center is within 30 straight-line miles of this county’s (Connecticut planning regions use the Census internal point); residents per square mile, their share and their growth since 2020; the Medicare Advantage share; and the USDA rural-urban code.',
   inputs: ['counties', 'nursing_homes', 'businesses', 'medicare_advantage', 'rural_codes'],
   fn: (counties, nursing_homes, businesses, medicare_advantage, rural_codes) => {
     const nh = new Map(nursing_homes.map((r) => [r.geoid, r]));
@@ -799,17 +813,18 @@ dash.calc('reach', {
     const ma = new Map(medicare_advantage.map((r) => [r.geoid, r]));
     const rows = counties.filter((c) => c.census_match);
     const R = 3958.8, rad = Math.PI / 180, MILES = 30, dLat = MILES / 69;
-    const byLat = rows.slice().sort((a, b) => a.lat - b.lat);
-    const lats = byLat.map((c) => c.lat);
+    // Distances run between counties' 2020 population centers (reach_lat / reach_lon), so a circle starts where people live.
+    const byLat = rows.slice().sort((a, b) => a.reach_lat - b.reach_lat);
+    const lats = byLat.map((c) => c.reach_lat);
     const start = (x) => { let lo = 0, hi = lats.length; while (lo < hi) { const m = (lo + hi) >> 1; if (lats[m] < x) lo = m + 1; else hi = m; } return lo; };
     const ages = ['65_74', '75_84', '85plus', '65plus', '75plus'];  // field suffixes: Urban's bands, then 65+ and 75+
     const per = (n, c) => { if (!(c.land_sqmi > 0) || n == null) return null; const v = n / c.land_sqmi; return v < 10 ? Math.round(v * 10) / 10 : Math.round(v); };
     return rows.map((c) => {
       const sums = {sl: 0, hc: 0, nh: 0};
       ages.forEach((a) => { sums['p' + a] = 0; });
-      for (let k = start(c.lat - dLat); k < byLat.length && byLat[k].lat <= c.lat + dLat; k++) {
+      for (let k = start(c.reach_lat - dLat); k < byLat.length && byLat[k].reach_lat <= c.reach_lat + dLat; k++) {
         const o = byLat[k];
-        const a = Math.sin(((o.lat - c.lat) * rad) / 2) ** 2 + Math.cos(c.lat * rad) * Math.cos(o.lat * rad) * Math.sin(((o.lon - c.lon) * rad) / 2) ** 2;
+        const a = Math.sin(((o.reach_lat - c.reach_lat) * rad) / 2) ** 2 + Math.cos(c.reach_lat * rad) * Math.cos(o.reach_lat * rad) * Math.sin(((o.reach_lon - c.reach_lon) * rad) / 2) ** 2;
         if (2 * R * Math.asin(Math.min(1, Math.sqrt(a))) <= MILES) {
           ages.forEach((a) => { sums['p' + a] += o['pop_' + a] || 0; });
           const b = biz.get(o.geoid) || {};
@@ -975,7 +990,7 @@ window.AX = (() => {
   };
   const PAYERS = {
     consumer: 'older adults or their families', senior_living: 'senior living communities', home_care: 'home care agencies',
-    medicare: 'Medicare', medicaid: 'Medicaid',
+    medicare: 'Medicare',
   };
   const num = d3.format(',');
   const info = () => {
@@ -1028,6 +1043,14 @@ window.AX = (() => {
   };
   const statusOf = (...ds) => (ds.some((d) => d.status === 'error') ? 'error' : ds.every((d) => d.status === 'ok') ? 'ok' : 'loading');
 
+  // The open tooltip's hide function. Scrolling, leaving the window or switching away closes it,
+  // since a pointer that stops moving over the map sends no leave event.
+  let openTipHide = null;
+  const closeTip = () => { if (openTipHide) { const h = openTipHide; openTipHide = null; h(); } };
+  window.addEventListener('scroll', closeTip, {passive: true, capture: true});
+  window.addEventListener('blur', closeTip);
+  document.addEventListener('pointerout', (e) => { if (!e.relatedTarget) closeTip(); });
+
   // Tooltip: lines are [label, text, source, field, where, suffix].
   const showTip = (tip, box, title, lines, x, y) => {
     const head = document.createElement('strong');
@@ -1072,8 +1095,10 @@ window.AX = (() => {
       ring.attr('cx', p.x).attr('cy', p.y).attr('r', p.rad + 2).style('display', null);
       const s = node.clientWidth / w || 1;
       showTip(tip, box, title(p.r), lines(p.r), p.x * s, p.y * s);
+      openTipHide = hide;
     };
     svg.on('pointermove', show).on('pointerdown', show).on('pointerleave', hide);
+    box.addEventListener('pointerleave', hide);
     if (pick) svg.style('cursor', 'pointer').on('click', (e) => { const p = near(e); if (p) pick(p.r); });
   };
 
@@ -1137,8 +1162,10 @@ window.AX = (() => {
       hover.attr('d', path(f)).style('display', null);
       const [x, y] = d3.pointer(e, box);
       showTip(tip, box, o.title(f.r), o.lines(f.r), x, y);
+      openTipHide = hide;
     };
     g.on('pointermove', show).on('pointerdown', show).on('pointerleave', hide);
+    box.addEventListener('pointerleave', hide);
     if (o.pick) g.style('cursor', 'pointer').on('click', (e) => { const f = at(e); if (f) o.pick(f.r); });
   };
 
@@ -1190,7 +1217,6 @@ window.AX = (() => {
       if (ans.medicare === 'ma') add('ma_pct', 'All', 3);
       if (ans.medicare === 'traditional') add('ma_pct', 'All', 2, true);
     }
-    if (pay.has('medicaid')) add('poverty_rate', urbanAge('poverty_rate', a), 3);
     add('residents', cen, 2);
     if (ans.reach === 'home') { add('within30', cen, 3); add('per_sqmi', cen, 3); }
     if (ans.reach === 'site') add('within30', cen, 3);
@@ -1264,7 +1290,7 @@ window.AX = (() => {
     document.querySelectorAll('#survey input').forEach((i) => {
       i.checked = i.name === 'pay' ? ans.pay.includes(i.value) : ans[i.name] === i.value;
     });
-    document.querySelectorAll('#q-medicare').forEach((q) => { q.hidden = !ans.pay.includes('medicare'); });
+    document.querySelectorAll('#q-medicare').forEach((q) => { const hide = !ans.pay.includes('medicare'); if (q.hidden !== hide) q.hidden = hide; });
   });
 })();
 
@@ -1294,8 +1320,14 @@ dash.draw('state-select', (sel) => {
   if (c.status !== 'ok') { sel.replaceChildren(); return; }
   const states = Array.from(new Map(c.data.filter((r) => r.census_match).map((r) => [r.state, r.state_name])).entries())
     .sort((a, b) => String(a[1]).localeCompare(String(b[1])));
-  sel.replaceChildren(new Option('All states', ''), ...states.map(([st, name]) => new Option(name, st)));
-  sel.value = dash.params().state || '';
+  // Rebuild the list only when it changes, so a redraw never closes the dropdown while it's open.
+  const key = states.map(([st]) => st).join(',');
+  if (AX.stateKey !== key || sel.options.length !== states.length + 1) {
+    sel.replaceChildren(new Option('All states', ''), ...states.map(([st, name]) => new Option(name, st)));
+    AX.stateKey = key;
+  }
+  const want = dash.params().state || '';
+  if (sel.value !== want) sel.value = want;
   sel.onchange = () => dash.setParams({state: sel.value});
 });
 
@@ -2044,7 +2076,7 @@ dash.draw('ranking-body', (tb) => {
 });
 </script>
 <footer class="site-footer" id="site-footer">
-  <p>Data: Urban Institute, <a href="https://datacatalog.urban.org/dataset/metrics-data-aging-opportunity-dashboard" target="_blank" rel="noopener">Metrics Data for the Aging Opportunity Dashboard</a> (ODC-BY 1.0); U.S. Census Bureau <a href="https://www.census.gov/data/datasets/time-series/demo/popest/2020s-counties-detail.html" target="_blank" rel="noopener">county population estimates</a>, <a href="https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.html" target="_blank" rel="noopener">Gazetteer</a>, <a href="https://www.census.gov/programs-surveys/cbp.html" target="_blank" rel="noopener">County Business Patterns</a> and <a href="https://www.census.gov/geographies/mapping-files/time-series/geo/cartographic-boundary.html" target="_blank" rel="noopener">county boundaries</a>; CMS <a href="https://www.cms.gov/data-research/statistics-trends-and-reports/medicare-advantagepart-d-contract-and-enrollment-data/ma-state/county-penetration" target="_blank" rel="noopener">Medicare Advantage penetration</a> and <a href="https://data.cms.gov/provider-data/dataset/4pq5-n9py" target="_blank" rel="noopener">nursing home provider data</a>; USDA Economic Research Service <a href="https://www.ers.usda.gov/data-products/rural-urban-continuum-codes" target="_blank" rel="noopener">Rural-Urban Continuum Codes</a>. See "About the data" for years and definitions.</p>
+  <p>Data: Urban Institute, <a href="https://datacatalog.urban.org/dataset/metrics-data-aging-opportunity-dashboard" target="_blank" rel="noopener">Metrics Data for the Aging Opportunity Dashboard</a> (ODC-BY 1.0); U.S. Census Bureau <a href="https://www.census.gov/data/datasets/time-series/demo/popest/2020s-counties-detail.html" target="_blank" rel="noopener">county population estimates</a>, <a href="https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.html" target="_blank" rel="noopener">Gazetteer</a>, <a href="https://www.census.gov/geographies/reference-files/time-series/geo/centers-population.html" target="_blank" rel="noopener">centers of population</a>, <a href="https://www.census.gov/programs-surveys/cbp.html" target="_blank" rel="noopener">County Business Patterns</a> and <a href="https://www.census.gov/geographies/mapping-files/time-series/geo/cartographic-boundary.html" target="_blank" rel="noopener">county boundaries</a>; CMS <a href="https://www.cms.gov/data-research/statistics-trends-and-reports/medicare-advantagepart-d-contract-and-enrollment-data/ma-state/county-penetration" target="_blank" rel="noopener">Medicare Advantage penetration</a> and <a href="https://data.cms.gov/provider-data/dataset/4pq5-n9py" target="_blank" rel="noopener">nursing home provider data</a>; USDA Economic Research Service <a href="https://www.ers.usda.gov/data-products/rural-urban-continuum-codes" target="_blank" rel="noopener">Rural-Urban Continuum Codes</a>. See "About the data" for years and definitions.</p>
   <p>Data as of November 2026. Built for <a href="https://www.agetech-ventures.com/">AgeTech Ventures</a>.</p>
 </footer>
 </main>

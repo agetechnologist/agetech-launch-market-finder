@@ -144,8 +144,13 @@
 
   // Redraw when a tab or section is shown, and when the page width changes.
   document.addEventListener('DOMContentLoaded', () => {
-    new MutationObserver((list) => { if (list.some((m) => m.attributeName === 'hidden')) schedule(); })
-      .observe(document.body, {attributes: true, attributeFilter: ['hidden'], subtree: true});
+    // Redraw only when something holding drawings is actually revealed (a tab or the results).
+    // Setting hidden to the value it already has still reports a mutation, and tooltips toggle
+    // hidden on every hover; redrawing on those would loop or wipe the tooltip mid-hover.
+    const revealsDrawings = (m) => m.oldValue !== null && !m.target.hasAttribute('hidden')
+      && (m.target.matches('[data-draw]') || m.target.querySelector('[data-draw]') !== null);
+    new MutationObserver((list) => { if (list.some(revealsDrawings)) schedule(); })
+      .observe(document.body, {attributes: true, attributeFilter: ['hidden'], subtree: true, attributeOldValue: true});
     let lastWidth = document.documentElement.clientWidth;
     new ResizeObserver(() => {
       const w = document.documentElement.clientWidth;
