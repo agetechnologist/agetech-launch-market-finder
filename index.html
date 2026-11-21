@@ -251,6 +251,7 @@ a { color: var(--accent); }
 .lm-score .lm-recipe > summary:hover .lm-sum-label { text-decoration: underline; text-underline-offset: 3px; }
 .lm-table-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--cds-gap-sm) var(--cds-gap-md); }
 .lm-table-actions .lm-btn { font-size: var(--cds-font-size-body); padding: 7px 14px; }
+.lm-fill-mark { margin-left: 1px; color: var(--color-fg-muted); }
 .lm-download-msg { flex-basis: 100%; margin: 0; text-align: right; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
 .lm-recipe { border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md); background-color: var(--color-panel); }
 .lm-recipe > summary { cursor: pointer; line-height: 1.5; }
@@ -458,6 +459,7 @@ a { color: var(--accent); }
           <tbody data-draw="market-body"></tbody>
         </table>
       </div>
+      <p class="ax-desc" data-draw="fill-note" data-source="ranked_market"></p>
     </section>
     </div>
   </section>
@@ -635,6 +637,7 @@ a { color: var(--accent); }
       <h2 id="about-terms-title">Definitions and gaps</h2>
       <ul class="lm-about-notes">
         <li><b>Age groups.</b> The survey uses Urban Institute's own age groups (65–74, 75–84, and 85+), so every factor describes the same people: Census counts and Urban's money and health figures for the ages you pick. Each factor's label names the ages it uses. The Explore tab shows residents 75+ (75–84 plus 85+).</li>
+        <li><b>Net worth for ages 85+.</b> Urban reports 85+ median net worth for only 357 counties. For the 85+ group, the score uses the 75–84 figure where the 85+ one is missing, marked with an asterisk. Where both exist, the 85+ figure is typically about 6% lower (the middle half of counties run from 18% lower to 3% higher), so filled-in counties get a slight edge. Other measures differ too much by age to mix this way. Median income, for example, runs about a quarter lower at 85+, so those gaps stay empty.</li>
         <li><b>Senior living communities and home care businesses.</b> Senior living combines two Census business categories: assisted living facilities and continuing care retirement communities. Home care combines non-medical services for older adults and people with disabilities (which also takes in some adult day programs) with home health services. Both count business locations with paid staff, so a 200-unit community and a 20-unit one each count once. Businesses that Census lists only statewide are left out.</li>
         <li><b>Medicare Advantage share.</b> Medicare Advantage enrollees divided by everyone eligible for Medicare in the county, at all ages. The November 2026 CMS file leaves out Alaska and Connecticut while their county codes are updated, and blanks counties with 10 or fewer enrollees.</li>
         <li><b>Metro and rural.</b> Question 4 uses USDA's Rural-Urban Continuum Codes. Metro counties are codes 1–3, and rural and small-town counties are the nonmetro codes 4–9.</li>
@@ -648,6 +651,11 @@ a { color: var(--accent); }
 </div>
 
 <script>
+// Urban reports 85+ median net worth for only 357 counties. For the 85+ group, the 75–84 figure stands in
+// where the 85+ one is missing. Net worth only: where both exist the 85+ figure is typically just 6% lower,
+// while other measures differ far more by age (85+ median income runs about a quarter lower), so they aren't filled.
+const AGE_FILL = {median_net_worth: {'85+': '75-84'}};
+
 dash.loader('metrics', {
   description: 'The file stores each row as a list in column order to keep it small; this turns each list back into a row with named columns.',
   fn: ({answer}) => {
@@ -862,7 +870,7 @@ dash.calc('reach', {
 
 dash.calc('market', {
   title: 'Fit score by county',
-  description: 'Each county’s percentile against all US counties on every factor in the mix your answers set, and the weighted average of those percentiles as a 0–100 fit score. A county needs data on every High (3×) factor, and on at least two-thirds of the weight overall, to get a score.',
+  description: 'Each county’s percentile against all US counties on every factor in the mix your answers set, and the weighted average of those percentiles as a 0–100 fit score. A county needs data on every High (3×) factor, and on at least two-thirds of the weight overall, to get a score. For ages 85+, median net worth uses the 75–84 figure where Urban has no 85+ one (f_ columns mark those).',
   inputs: ['factors', 'reach', 'metrics'],
   fn: (factors, reach, metrics) => {
     const p = dash.params();
@@ -880,22 +888,28 @@ dash.calc('market', {
     // Urban's figure for the same age band, or all ages when Urban has none for it.
     const urbanAge = (f) => (String(f.ages).split(', ').includes(aud) ? aud : 'All');
     const nwAge = byId.has('median_net_worth') ? urbanAge(byId.get('median_net_worth')) : 'All';
+    const fillOf = (id, age) => (AGE_FILL[id] || {})[age];
     const ages = new Set([nwAge, ...used.map((it) => it.age)]);
+    [...ages].forEach((a) => Object.keys(AGE_FILL).forEach((id) => { if (fillOf(id, a)) ages.add(fillOf(id, a)); }));
     const urban = new Map();
     for (const r of metrics) if (ages.has(r.age)) urban.set(r.geoid + '|' + r.age, r);
     const shown = (v, unit) => (v == null ? null : unit === 'share' ? Math.round(v * 1000) / 10 : unit === 'per1000days' ? Math.round(v * 100) / 100 : Math.round(v));
     const key = (it) => it.id + (it.age !== 'All' ? '_' + it.age.replace('+', 'plus').replace(/[^0-9a-z]/gi, '_') : '');
+    const urbanVal = (id, age, geoid, unit) => { const r = urban.get(geoid + '|' + age); return r && r[id] != null ? shown(r[id], unit) : null; };
+    // {v, filled}: filled is true when a stand-in age group's figure was used (see AGE_FILL).
     const valueOf = (it, c) => {
       const f = byId.get(it.id);
       if (f.source === 'Urban Institute') {
-        const r = urban.get(c.geoid + '|' + it.age);
-        return r && r[it.id] != null ? shown(r[it.id], f.unit) : null;
+        const v = urbanVal(it.id, it.age, c.geoid, f.unit);
+        const alt = fillOf(it.id, it.age);
+        if (v == null && alt) { const w = urbanVal(it.id, alt, c.geoid, f.unit); if (w != null) return {v: w, filled: true}; }
+        return {v, filled: false};
       }
       const field = f.ages ? it.id + '_' + suf(it.age) : it.id;
-      return c[field] == null ? null : c[field];
+      return {v: c[field] == null ? null : c[field], filled: false};
     };
     const pctFns = used.map((it) => {
-      const sorted = reach.map((c) => valueOf(it, c)).filter((v) => v != null).sort((a, b) => a - b);
+      const sorted = reach.map((c) => valueOf(it, c).v).filter((v) => v != null).sort((a, b) => a - b);
       const n = sorted.length;
       const bound = (v, strict) => { let lo = 0, hi = n; while (lo < hi) { const m = (lo + hi) >> 1; if (strict ? sorted[m] < v : sorted[m] <= v) lo = m + 1; else hi = m; } return lo; };
       return (v) => {
@@ -906,19 +920,24 @@ dash.calc('market', {
     });
     const total = used.reduce((s, it) => s + it.weight, 0);
     return reach.map((c) => {
-      const nw = urban.get(c.geoid + '|' + nwAge);
+      let nwv = urbanVal('median_net_worth', nwAge, c.geoid, 'usd'), nwFilled = false;
+      if (nwv == null && fillOf('median_net_worth', nwAge)) {
+        nwv = urbanVal('median_net_worth', fillOf('median_net_worth', nwAge), c.geoid, 'usd');
+        nwFilled = nwv != null;
+      }
       const row = {
         geoid: c.geoid, county: c.county, state: c.state, state_name: c.state_name, lat: c.lat, lon: c.lon,
         population: c.population, rucc: c.rucc, metro: c.metro, remote: c.remote,
         residents: c['residents_' + suf(aud)], within30: c['within30_' + suf(aud)],
         per_sqmi: c['per_sqmi_' + suf(aud)], growth: c['growth_' + suf(aud)],
-        median_net_worth: nw && nw.median_net_worth != null ? Math.round(nw.median_net_worth) : null,
+        median_net_worth: nwv, median_net_worth_filled: nwFilled,
       };
       let sum = 0, wsum = 0, missingHigh = false;
       used.forEach((it, j) => {
-        const v = valueOf(it, c);
+        const {v, filled} = valueOf(it, c);
         const q = pctFns[j](v);
         row['v_' + key(it)] = v;
+        row['f_' + key(it)] = filled;
         row['p_' + key(it)] = q == null ? null : Math.round(q);
         if (q != null) { sum += q * it.weight; wsum += it.weight; } else if (it.weight === 3) missingHigh = true;
       });
@@ -1243,6 +1262,7 @@ window.AX = (() => {
     WEIGHT, shares, PAYERS, UNIT, info, ages, age, ageLabel, unitText, lc, fmt, tick, density, pctText, num, c0, seq, mark, empty, statusOf,
     showTip, interact, shapesById, shapeMap, parseMix, mixString, mixItems, mixKey, aud, ageText, answers, urbanAge, surveyMix, changed, factorName,
     selectedGeoid, marketLines, search: '', mlarge: false,
+    fillAge: (id, age) => (AGE_FILL[id] || {})[age],
   };
 })();
 </script>
@@ -1348,7 +1368,9 @@ dash.draw('score-bullets', (ul) => {
     const li = document.createElement('li');
     const meta = document.createElement('span');
     meta.className = 'lm-score-meta';
-    meta.textContent = `: ${share.get(it)}% of score \u00b7 ${AX.WEIGHT[it.weight]} \u00b7 ${it.low ? 'less is better' : 'more is better'}`;
+    const alt = AX.fillAge(it.id, it.age);
+    meta.textContent = `: ${share.get(it)}% of score \u00b7 ${AX.WEIGHT[it.weight]} \u00b7 ${it.low ? 'less is better' : 'more is better'}`
+      + (alt ? ` \u00b7 ${AX.ageText(alt)} figure where Urban has no ${AX.ageText(it.age)} one` : '');
     li.append(AX.mark('b', AX.factorName(f, it), 'factors', 'label', 'id=' + f.id), meta);
     return li;
   }));
@@ -1617,7 +1639,7 @@ dash.draw('profile', (el) => {
     [`Residents ${a} per square mile`, AX.density(r.per_sqmi), 'per_sqmi'],
     [`Growth in residents ${a} since 2020`, AX.pctText(r.growth), 'growth'],
     ['Population', AX.num(r.population), 'population'],
-    [`Median net worth, ${AX.ageLabel(nwAge).toLowerCase()}`, r.median_net_worth == null ? 'no data' : '$' + AX.num(r.median_net_worth), 'median_net_worth'],
+    [`Median net worth, ${AX.ageLabel(nwAge).toLowerCase()}`, r.median_net_worth == null ? 'no data' : '$' + AX.num(r.median_net_worth) + (r.median_net_worth_filled ? ' (ages 75–84)' : ''), 'median_net_worth'],
   ].forEach(([label, text, field]) => {
     const d = document.createElement('div');
     const dt = document.createElement('dt');
@@ -1663,7 +1685,7 @@ dash.draw('profile', (el) => {
     track.append(bar);
     const meta = document.createElement('div');
     meta.className = 'lm-fx-meta';
-    meta.append(v == null ? 'No data' : AX.mark('span', AX.fmt(v, f), 'market', 'v_' + k, where), (AX.UNIT[f.unit] || '') + ` · ${it.low ? 'less is better' : 'more is better'} · ${share.get(it)}% of the score`);
+    meta.append(v == null ? 'No data' : AX.mark('span', AX.fmt(v, f), 'market', 'v_' + k, where), (AX.UNIT[f.unit] || '') + (r['f_' + k] ? ` (ages ${AX.ageText(AX.fillAge(it.id, it.age))}, as Urban has no ${AX.ageText(it.age)} figure here)` : '') + ` · ${it.low ? 'less is better' : 'more is better'} · ${share.get(it)}% of the score`);
     fx.append(top, track, meta);
     list.append(fx);
   });
@@ -1681,6 +1703,7 @@ const marketColumns = () => {
   const factorCols = items.map((it) => {
     const f = byId.get(it.id);
     return {field: 'v_' + AX.mixKey(it), pts: 'p_' + AX.mixKey(it), share: share.get(it), factor: f,
+      fill: AX.fillAge(it.id, it.age) ? 'f_' + AX.mixKey(it) : null, fillAge: AX.fillAge(it.id, it.age),
       name: AX.factorName(f, it) + (it.low ? ' (less is better)' : ''),
       label: `${AX.factorName(f, it)}${it.low ? ' (less is better)' : ''} (${share.get(it)}%)`, fmt: (v) => (v == null ? '' : AX.fmt(v, f)), num: true};
   });
@@ -1688,7 +1711,7 @@ const marketColumns = () => {
   const fixed = [
     has('population', 'All') ? null : {field: 'population', label: 'Population', fmt: (v) => (v == null ? '' : AX.num(v)), num: true},
     has('residents', a) ? null : {field: 'residents', label: `Residents ${AX.ageText(a)}`, fmt: (v) => (v == null ? '' : AX.num(v)), num: true},
-    has('median_net_worth', nwAge) ? null : {field: 'median_net_worth', label: `Median net worth, ${AX.ageLabel(nwAge).toLowerCase()}`, fmt: (v) => (v == null ? '' : '$' + AX.num(v)), num: true},
+    has('median_net_worth', nwAge) ? null : {field: 'median_net_worth', fill: AX.fillAge('median_net_worth', nwAge) ? 'median_net_worth_filled' : null, fillAge: AX.fillAge('median_net_worth', nwAge), label: `Median net worth, ${AX.ageLabel(nwAge).toLowerCase()}`, fmt: (v) => (v == null ? '' : '$' + AX.num(v)), num: true},
   ].filter(Boolean);
   return [
     {field: 'rank', label: 'Rank', fmt: (v) => AX.num(v), num: true},
@@ -1715,11 +1738,13 @@ const rankingCsv = () => {
   marketColumns().forEach((c) => {
     if (c.factor) {
       head.push(`${c.name} [${c.share}% of score] value${unitNote(c.factor)}`); get.push((d) => d[c.field]);
+      if (c.fill) { head.push(`${c.name}: ages ${AX.ageText(c.fillAge)} figure used`); get.push((d) => (d[c.fill] ? 'yes' : '')); }
       head.push(`${c.name} [${c.share}% of score] points (0-100)`); get.push((d) => d[c.pts]);
     } else if (c.field === 'state') {
       head.push('State', 'County FIPS code'); get.push((d) => d.state, (d) => d.geoid);
     } else if (c.field === 'median_net_worth') {
       head.push(c.label + ' ($)'); get.push((d) => d[c.field]);
+      if (c.fill) { head.push(`${c.label}: ages ${AX.ageText(c.fillAge)} figure used`); get.push((d) => (d[c.fill] ? 'yes' : '')); }
     } else {
       head.push(c.label); get.push((d) => d[c.field]);
     }
@@ -1753,6 +1778,11 @@ const rankingCsv = () => {
   };
   document.querySelectorAll('#lm-download').forEach((b) => b.addEventListener('click', save));
 })();
+
+dash.draw('fill-note', (el) => {
+  const alt = marketColumns().find((c) => c.fill);
+  el.textContent = alt ? `* Ages ${AX.ageText(alt.fillAge)} figure. Urban reports 85+ median net worth for only 357 counties, so the 75–84 figure stands in elsewhere.` : '';
+});
 
 dash.draw('market-head', (thead) => {
   const cols = marketColumns();
@@ -1802,6 +1832,13 @@ dash.draw('market-body', (tb) => {
       const td = document.createElement('td');
       if (c.num) td.className = 'ax-num';
       td.append(c.fmt(d[c.field]));
+      if (c.fill && d[c.fill]) {
+        const mk = document.createElement('span');
+        mk.className = 'lm-fill-mark';
+        mk.textContent = '*';
+        mk.title = `Ages ${AX.ageText(c.fillAge)} figure: Urban has no figure for this county's older group`;
+        td.append(mk);
+      }
       if (c.pts && d[c.pts] != null) {
         const track = document.createElement('div');
         track.className = 'lm-cell-track';
