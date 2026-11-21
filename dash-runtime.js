@@ -115,7 +115,8 @@
   function schedule() {
     if (scheduled) return;
     scheduled = true;
-    requestAnimationFrame(runAll);
+    // A timer, not requestAnimationFrame: animation frames pause in background tabs.
+    setTimeout(runAll, 16);
   }
 
   function changed() { schedule(); }

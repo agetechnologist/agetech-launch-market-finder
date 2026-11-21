@@ -7,7 +7,8 @@
 <meta name="description" content="Where should you build your next AgeTech company? Answer a few questions and see how every US county scores, using Urban Institute, Census, CMS and USDA data.">
 <meta property="og:title" content="AgeTech Launch Market Finder">
 <meta property="og:description" content="Answer a few questions about your AgeTech company and see how every US county scores as a launch market.">
-<link rel="icon" href="logo.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@400;700&display=swap">
@@ -142,7 +143,7 @@ a { color: var(--accent); }
 <header class="site-header">
   <div class="site-header-inner">
     <a class="site-logo" href="https://www.agetech-ventures.com/" aria-label="AgeTech Ventures, back to the blog"><img src="logo.png" alt="AgeTech Ventures" width="154" height="30"></a>
-    <a class="site-subscribe" href="https://www.agetech-ventures.com/subscribe">Subscribe</a>
+    <a class="site-subscribe" href="https://www.agetech-ventures.com/subscribe" target="_blank" rel="noopener">Subscribe</a>
   </div>
 </header>
 <main id="dash-root">
@@ -152,8 +153,8 @@ a { color: var(--accent); }
 .ax { display: grid; gap: var(--cds-gap-lg); }
 .ax-head { display: grid; gap: var(--cds-gap-sm); }
 .ax-title { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); line-height: 1.15; margin: 0; text-wrap: balance; }
-.ax-intro { margin: 0; max-width: 70ch; color: var(--color-fg-muted); line-height: 1.5; }
-.ax-lede { margin: 0; max-width: 70ch; line-height: 1.55; }
+.ax-intro { margin: 0; color: var(--color-fg-muted); line-height: 1.5; }
+.ax-lede { margin: 0; line-height: 1.55; }
 .ax-lede b { font-weight: var(--cds-font-weight-medium); }
 .ax-controls { display: flex; flex-wrap: wrap; gap: var(--cds-gap-md); align-items: flex-end; }
 .ax-field { display: grid; gap: var(--cds-gap-xs); min-width: 0; max-width: 100%; }
@@ -227,7 +228,21 @@ a { color: var(--accent); }
 
 .lm-opt { display: flex; gap: 8px; align-items: flex-start; cursor: pointer; line-height: 1.35; }
 .lm-opt input { margin: 2px 0 0; accent-color: var(--color-fg); flex: none; }
-.lm-large { font-size: var(--cds-font-size-caption); max-width: 18rem; }
+.lm-large { font-size: var(--cds-font-size-caption); max-width: 21rem; }
+.lm-large b { display: block; font-weight: var(--cds-font-weight-medium); font-size: var(--cds-font-size-body); }
+.lm-large small { display: block; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.lm-reveal { display: flex; justify-content: flex-start; padding-top: var(--cds-gap-sm); }
+.lm-btn-big { font-size: var(--cds-font-size-body); padding: 10px 20px; }
+.lm-results { scroll-margin-top: 12px; }
+.lm-score { padding: var(--cds-pad-lg); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background-color: var(--color-panel); scroll-margin-top: 12px; }
+.lm-score-list { list-style: disc; margin: 0; padding-left: 1.2em; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: var(--cds-gap-sm) var(--cds-gap-xl); }
+.lm-score-list li { line-height: 1.45; }
+.lm-score-list li b { font-weight: var(--cds-font-weight-medium); }
+.lm-score-list .lm-score-meta { color: var(--color-fg-muted); }
+.lm-score .lm-recipe { padding: 0; border: 0; background-color: transparent; }
+.lm-table-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--cds-gap-sm) var(--cds-gap-md); }
+.lm-table-actions .lm-btn { font-size: var(--cds-font-size-body); padding: 7px 14px; }
+.lm-download-msg { flex-basis: 100%; margin: 0; text-align: right; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
 .lm-recipe { border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md); background-color: var(--color-panel); }
 .lm-recipe > summary { cursor: pointer; line-height: 1.5; }
 .lm-recipe > summary .lm-sum-label { font-weight: var(--cds-font-weight-medium); }
@@ -237,7 +252,8 @@ a { color: var(--accent); }
 .lm-item { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cds-gap-sm) var(--cds-gap-md); padding-block: 6px; border-bottom: 1px solid var(--color-border-line); }
 .lm-item-text { display: grid; gap: 2px; min-width: 0; flex: 1 1 14rem; }
 .lm-item-meta { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
-.lm-item .dash-select { width: 7.5rem; }
+.lm-item .dash-select { width: 9rem; }
+.lm-item-share { min-width: 6.5rem; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); font-variant-numeric: tabular-nums; }
 .lm-btn { font: inherit; font-size: var(--cds-font-size-caption); color: var(--color-fg); background-color: transparent; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: 5px 10px; cursor: pointer; }
 .lm-btn:hover { border-color: var(--color-fg-muted); }
 .lm-btn-primary { background-color: var(--color-fg); color: var(--color-bg); border-color: var(--color-fg); }
@@ -292,7 +308,7 @@ a { color: var(--accent); }
 <div class="ax" id="explorer">
   <header class="ax-head" id="header">
     <h1 class="ax-title" id="title">AgeTech Launch Market Finder</h1>
-    <p class="ax-intro" id="intro">Where do you want to build your next company? Tell us a little about it, then explore how every US county scores for it, from 0 to 100.</p>
+    <p class="ax-intro" id="intro">Where do you want to launch your next company for the future of aging?</p>
   </header>
 
   <div class="lm-tabs" role="tablist" aria-label="Views">
@@ -305,13 +321,13 @@ a { color: var(--accent); }
     <div class="lm-step" id="survey-step">
       <h2 class="lm-step-title" id="survey-title">Tell us about your company</h2>
       <div class="lm-survey" id="survey">
-        <div class="lm-q" id="q-pay" role="group" aria-labelledby="q-pay-title">
+        <div class="lm-q" id="q-pay" role="radiogroup" aria-labelledby="q-pay-title">
           <p class="lm-q-title" id="q-pay-title">1. Who pays for your solution?</p>
-          <label class="lm-opt"><input type="checkbox" name="pay" value="consumer" id="pay-consumer"><span>Older adults or their families</span></label>
-          <label class="lm-opt"><input type="checkbox" name="pay" value="senior_living" id="pay-senior_living"><span>Senior living communities</span></label>
-          <label class="lm-opt"><input type="checkbox" name="pay" value="home_care" id="pay-home_care"><span>Home care agencies</span></label>
-          <label class="lm-opt"><input type="checkbox" name="pay" value="medicare" id="pay-medicare"><span>Medicare</span></label>
-          <label class="lm-opt"><input type="checkbox" name="pay" value="medicaid" id="pay-medicaid"><span>Medicaid</span></label>
+          <label class="lm-opt"><input type="radio" name="pay" value="consumer" id="pay-consumer"><span>Older adults or their families</span></label>
+          <label class="lm-opt"><input type="radio" name="pay" value="senior_living" id="pay-senior_living"><span>Senior living communities</span></label>
+          <label class="lm-opt"><input type="radio" name="pay" value="home_care" id="pay-home_care"><span>Home care agencies</span></label>
+          <label class="lm-opt"><input type="radio" name="pay" value="medicare" id="pay-medicare"><span>Medicare</span></label>
+          <label class="lm-opt"><input type="radio" name="pay" value="medicaid" id="pay-medicaid"><span>Medicaid</span></label>
         </div>
         <div class="lm-q" id="q-aud" role="radiogroup" aria-labelledby="q-aud-title">
           <p class="lm-q-title" id="q-aud-title">2. Who is it mainly for?</p>
@@ -338,15 +354,28 @@ a { color: var(--accent); }
           <label class="lm-opt"><input type="radio" name="medicare" value="both" id="medicare-both"><span>Both, or not sure</span></label>
         </div>
       </div>
+      <div class="lm-reveal" id="reveal-row">
+        <button type="button" class="lm-btn lm-btn-primary lm-btn-big" id="lm-show">Show my best markets</button>
+      </div>
+    </div>
+
+    <div class="ax lm-results" id="results" hidden>
+    <section class="lm-step lm-score" id="score-step" aria-labelledby="score-title">
+      <h2 class="lm-step-title" id="score-title">Your custom market score</h2>
+      <p class="ax-desc lm-score-intro">Every US county gets a score from 0 to 100, built from the factors below. Each factor's percentage is its share of the score.</p>
+      <ul class="lm-score-list" data-draw="score-bullets" data-source="factors"></ul>
       <details class="lm-recipe" id="recipe">
-        <summary><span class="lm-sum-label">What the score counts</span> <span class="lm-sum-list" data-draw="recipe-summary">—</span></summary>
+        <summary><span class="lm-sum-label">Change weights or add a factor</span></summary>
         <div class="lm-recipe-body">
-          <p class="ax-desc">Your answers set these factors. Each county's score is the weighted average of its percentile on each one, compared with every US county. "Less is better" flips a factor, so a county with a low value earns a high percentile. Change a weight, remove a factor, or add one from the library.</p>
+          <p class="ax-desc">Low counts once (1&times;), Medium twice (2&times;) and High three times (3&times;). A county's score is the weighted average of its percentile on each factor, compared with every US county. "Less is better" flips a factor, so a county with a low value earns a high percentile.</p>
           <div data-draw="recipe" data-source="factors"></div>
         </div>
       </details>
-    </div>
+    </section>
 
+    <section class="lm-step" id="filters-step" aria-labelledby="filters-title">
+      <h2 class="lm-step-title" id="filters-title">Narrow your results</h2>
+      <p class="ax-desc">Pick a state or a minimum number of older residents. Scores still compare every US county.</p>
     <div class="ax-controls" id="market-filters">
       <div class="ax-field">
         <label for="lm-state">State</label>
@@ -362,6 +391,7 @@ a { color: var(--accent); }
         </select>
       </div>
     </div>
+    </section>
 
     <p class="ax-lede" id="market-takeaway">For <span data-draw="mt-model">—</span>, the best fit<span data-draw="mt-where"></span> is <b data-draw="mt-top" data-source="market_summary" data-field="top_name" data-row="0">—</b>, with a fit score of <b data-draw="mt-score" data-source="market_summary" data-field="top_score" data-row="0">—</b>. It has <b data-draw="mt-older" data-source="market_summary" data-field="top_residents" data-row="0">—</b> residents <span data-draw="age-label">—</span>, and <b data-draw="mt-reach" data-source="market_summary" data-field="top_within30" data-row="0">—</b> live within 30 miles.</p>
 
@@ -411,7 +441,11 @@ a { color: var(--accent); }
           <h2 id="market-ranking-title">Best-fitting counties</h2>
           <p class="ax-desc">The top 25 by fit score are shown, with each factor's value; the bar under a value shows its points. Rank is the county's place among all ranked counties. Click a row to see why it scores what it does.</p>
         </div>
-        <label class="lm-opt lm-large" for="lm-large"><input type="checkbox" id="lm-large"><span>Only the 100 counties with the most residents <span data-draw="age-label">—</span></span></label>
+        <div class="lm-table-actions">
+          <label class="lm-opt lm-large" for="lm-large"><input type="checkbox" id="lm-large"><span><b>Only the 100 largest markets</b><small>the 100 counties with the most residents <span data-draw="age-label">—</span>, still sorted by fit score</small></span></label>
+          <button type="button" class="lm-btn lm-btn-primary" id="lm-download">Download CSV</button>
+          <p class="lm-download-msg" id="lm-download-msg" hidden>Downloads aren't available in this view. Open Sources beside the page to download the data.</p>
+        </div>
       </div>
       <div class="ax-table-wrap">
         <table class="ax-table" id="market-table" data-source="ranked_market" data-row-key="geoid" aria-labelledby="market-ranking-title">
@@ -420,6 +454,7 @@ a { color: var(--accent); }
         </table>
       </div>
     </section>
+    </div>
   </section>
 
   <section class="ax lm-panel" id="explore" role="tabpanel" aria-labelledby="tab-explore" hidden>
@@ -545,9 +580,9 @@ a { color: var(--accent); }
     <section class="ax-card" id="about-score">
       <h2 id="about-score-title">How the fit score works</h2>
       <ol class="lm-about-list">
-        <li>Your answers pick the factors that matter for your company and how much each one counts: low, medium or high. You can change them under "What the score counts".</li>
+        <li>Your answers pick the factors that matter for your company and how much each one counts: Low counts once (1&times;), Medium twice (2&times;) and High three times (3&times;). A factor's share of the score is its weight divided by the total. For example, one High, two Medium and one Low factor add up to 8, so the High factor is 3 of 8, or 38% of the score. You can change the factors under "What the score counts".</li>
         <li>For each factor, every US county gets a percentile from 0 to 100: where it stands against every other county. Where less is better, such as few annual wellness visits, the percentile is flipped.</li>
-        <li>The fit score is the weighted average of those percentiles. A county needs data on at least two-thirds of the weight to get a score.</li>
+        <li>The fit score is the weighted average of those percentiles. A county needs data on every High (3&times;) factor, and on at least two-thirds of the weight overall, to get a score. When a lower-weight factor has no data, the score uses the others, and the county's profile says which one is missing.</li>
         <li>The state, size and metro or rural choices narrow the ranking. They don't change any county's score, so a 90 means the same in every view.</li>
       </ol>
     </section>
@@ -560,14 +595,14 @@ a { color: var(--accent); }
             <tr><th>Source</th><th>Data year</th><th>What it adds</th></tr>
           </thead>
           <tbody>
-            <tr><td>Urban Institute, Metrics Data for the Aging Opportunity Dashboard, released November 2026</td><td>2021 to 2025, varies by metric</td><td>Income, net worth, savings, debt, poverty, health care use, long-term care quality and mortality, by age group</td></tr>
-            <tr><td>U.S. Census Bureau, county population estimates</td><td>July 1, 2025, and 2020 for growth</td><td>Residents 65+, 75+ and 85+, total population, and growth since 2020</td></tr>
-            <tr><td>U.S. Census Bureau, 2025 Gazetteer</td><td>2025</td><td>Land area and each county's location, for density and the 30-mile reach</td></tr>
-            <tr><td>U.S. Census Bureau, cartographic boundary file for counties</td><td>2024</td><td>County outlines for the maps</td></tr>
-            <tr><td>U.S. Census Bureau, County Business Patterns</td><td>2023</td><td>Senior living communities and home care businesses</td></tr>
-            <tr><td>CMS, Medicare Advantage State/County Penetration</td><td>November 2026</td><td>Share of people eligible for Medicare who are in Medicare Advantage</td></tr>
-            <tr><td>CMS, Nursing Home Provider Information</td><td>October 2026</td><td>Nursing homes, beds, star ratings and staff turnover, available under "Add a factor"</td></tr>
-            <tr><td>USDA Economic Research Service, Rural-Urban Continuum Codes</td><td>2023</td><td>Which counties are metro and which are rural or small-town, for question 4</td></tr>
+            <tr><td><a href="https://datacatalog.urban.org/dataset/metrics-data-aging-opportunity-dashboard" target="_blank" rel="noopener">Urban Institute, Metrics Data for the Aging Opportunity Dashboard, released November 2026</a></td><td>2021 to 2025, varies by metric</td><td>Income, net worth, savings, debt, poverty, health care use, long-term care quality and mortality, by age group</td></tr>
+            <tr><td><a href="https://www.census.gov/data/datasets/time-series/demo/popest/2020s-counties-detail.html" target="_blank" rel="noopener">U.S. Census Bureau, county population estimates</a></td><td>July 1, 2025, and 2020 for growth</td><td>Residents 65+, 75+ and 85+, total population, and growth since 2020</td></tr>
+            <tr><td><a href="https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.html" target="_blank" rel="noopener">U.S. Census Bureau, 2025 Gazetteer</a></td><td>2025</td><td>Land area and each county's location, for density and the 30-mile reach</td></tr>
+            <tr><td><a href="https://www.census.gov/geographies/mapping-files/time-series/geo/cartographic-boundary.html" target="_blank" rel="noopener">U.S. Census Bureau, cartographic boundary file for counties</a></td><td>2024</td><td>County outlines for the maps</td></tr>
+            <tr><td><a href="https://www.census.gov/programs-surveys/cbp.html" target="_blank" rel="noopener">U.S. Census Bureau, County Business Patterns</a></td><td>2023</td><td>Senior living communities and home care businesses</td></tr>
+            <tr><td><a href="https://www.cms.gov/data-research/statistics-trends-and-reports/medicare-advantagepart-d-contract-and-enrollment-data/ma-state/county-penetration" target="_blank" rel="noopener">CMS, Medicare Advantage State/County Penetration</a></td><td>November 2026</td><td>Share of people eligible for Medicare who are in Medicare Advantage</td></tr>
+            <tr><td><a href="https://data.cms.gov/provider-data/dataset/4pq5-n9py" target="_blank" rel="noopener">CMS, Nursing Home Provider Information</a></td><td>October 2026</td><td>Nursing homes, beds, star ratings and staff turnover, available under "Add a factor"</td></tr>
+            <tr><td><a href="https://www.ers.usda.gov/data-products/rural-urban-continuum-codes" target="_blank" rel="noopener">USDA Economic Research Service, Rural-Urban Continuum Codes</a></td><td>2023</td><td>Which counties are metro and which are rural or small-town, for question 4</td></tr>
           </tbody>
         </table>
       </div>
@@ -805,7 +840,7 @@ dash.calc('reach', {
 
 dash.calc('market', {
   title: 'Fit score by county',
-  description: 'Each county’s percentile against all US counties on every factor in the mix your answers set, and the weighted average of those percentiles as a 0–100 fit score. A county needs data on at least two-thirds of the weight to get a score.',
+  description: 'Each county’s percentile against all US counties on every factor in the mix your answers set, and the weighted average of those percentiles as a 0–100 fit score. A county needs data on every High (3×) factor, and on at least two-thirds of the weight overall, to get a score.',
   inputs: ['factors', 'reach', 'metrics'],
   fn: (factors, reach, metrics) => {
     const p = dash.params();
@@ -858,15 +893,16 @@ dash.calc('market', {
         per_sqmi: c['per_sqmi_' + aud + 'plus'], growth: c['growth_' + aud + 'plus'],
         median_net_worth: nw && nw.median_net_worth != null ? Math.round(nw.median_net_worth) : null,
       };
-      let sum = 0, wsum = 0;
+      let sum = 0, wsum = 0, missingHigh = false;
       used.forEach((it, j) => {
         const v = valueOf(it, c);
         const q = pctFns[j](v);
         row['v_' + key(it)] = v;
         row['p_' + key(it)] = q == null ? null : Math.round(q);
-        if (q != null) { sum += q * it.weight; wsum += it.weight; }
+        if (q != null) { sum += q * it.weight; wsum += it.weight; } else if (it.weight === 3) missingHigh = true;
       });
-      row.score = total > 0 && wsum >= (2 / 3) * total ? Math.round(sum / wsum) : null;
+      // A score needs every High (3x) factor and at least two-thirds of the weight overall.
+      row.score = total > 0 && !missingHigh && wsum >= (2 / 3) * total ? Math.round(sum / wsum) : null;
       return row;
     });
   },
@@ -916,7 +952,20 @@ dash.calc('market_summary', {
 window.AX = (() => {
   const AGE_LABEL = {'All': 'All ages', '50-64': 'Ages 50–64', '65+': 'Ages 65+', '65-74': 'Ages 65–74', '75-84': 'Ages 75–84', '75+': 'Ages 75+', '85+': 'Ages 85+'};
   const UNIT = {usd: '', share: '', pct: '', count: '', density: '', years: '', per1k: '', per100k: ' per 100,000 people', per100k_benef: ' per 100,000 beneficiaries', per1000days: ' per 1,000 residence days'};
-  const WEIGHT = ['Off', 'Low', 'Medium', 'High'];
+  const WEIGHT = ['Off', 'Low (1\u00d7)', 'Medium (2\u00d7)', 'High (3\u00d7)'];
+  // Each factor's share of the score: its weight over the total, rounded so the shares add to 100.
+  const shares = (items) => {
+    const on = items.filter((it) => it.weight > 0);
+    const total = on.reduce((t, it) => t + it.weight, 0);
+    const out = new Map();
+    if (!total) return out;
+    const raw = on.map((it) => (it.weight / total) * 100);
+    const pct = raw.map(Math.floor);
+    let left = 100 - pct.reduce((a, b) => a + b, 0);
+    raw.map((v, i) => [v - pct[i], i]).sort((a, b) => b[0] - a[0]).forEach(([, i]) => { if (left > 0) { pct[i] += 1; left -= 1; } });
+    on.forEach((it, i) => out.set(it, pct[i]));
+    return out;
+  };
   const PAYERS = {
     consumer: 'older adults or their families', senior_living: 'senior living communities', home_care: 'home care agencies',
     medicare: 'Medicare', medicaid: 'Medicaid',
@@ -1098,7 +1147,7 @@ window.AX = (() => {
   const answers = () => {
     const p = dash.params();
     return {
-      pay: Array.isArray(p.pay) ? p.pay.filter((x) => PAYERS[x]) : [],
+      pay: (Array.isArray(p.pay) ? p.pay.filter((x) => PAYERS[x]) : []).slice(0, 1),
       aud: aud(),
       reach: ['home', 'site', 'remote'].includes(p.reach) ? p.reach : 'home',
       medicare: ['ma', 'traditional', 'both'].includes(p.medicare) ? p.medicare : 'both',
@@ -1155,7 +1204,7 @@ window.AX = (() => {
     ];
   };
   return {
-    WEIGHT, PAYERS, UNIT, info, ages, age, ageLabel, unitText, lc, fmt, tick, density, pctText, num, c0, seq, mark, empty, statusOf,
+    WEIGHT, shares, PAYERS, UNIT, info, ages, age, ageLabel, unitText, lc, fmt, tick, density, pctText, num, c0, seq, mark, empty, statusOf,
     showTip, interact, shapesById, shapeMap, parseMix, mixString, mixItems, mixKey, aud, answers, urbanAge, surveyMix, changed, factorName,
     selectedGeoid, marketLines, search: '', mlarge: false,
   };
@@ -1209,6 +1258,17 @@ window.AX = (() => {
   });
 })();
 
+/* ---------- Results appear after "Show my best markets" ---------- */
+document.querySelectorAll('#lm-show').forEach((b) => b.addEventListener('click', () => {
+  document.querySelectorAll('#results').forEach((r) => { r.hidden = false; });
+  document.querySelectorAll('#reveal-row').forEach((r) => { r.hidden = true; });
+  const target = document.getElementById('score-step');
+  if (target) target.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'});
+}));
+// Start loading the ranking and map data while the reader answers, so results show quickly.
+dash.onData(() => { dash.data('market_summary'); dash.data('county_shapes'); });
+window.addEventListener('beforeprint', () => { document.querySelectorAll('#results').forEach((r) => { r.hidden = false; }); });
+
 /* ---------- Launch market: controls ---------- */
 document.querySelectorAll('#lm-floor').forEach((s) => {
   s.value = String(dash.params().mfloor ?? 1000);
@@ -1229,13 +1289,27 @@ dash.draw('state-select', (sel) => {
   sel.onchange = () => dash.setParams({state: sel.value});
 });
 
-dash.draw('recipe-summary', (el) => {
+dash.draw('score-bullets', (ul) => {
   const fc = dash.data('factors');
-  if (fc.status !== 'ok') { el.textContent = '—'; return; }
+  if (fc.status !== 'ok') { ul.replaceChildren(); return; }
   const byId = new Map(fc.data.map((f) => [f.id, f]));
-  const parts = AX.mixItems().filter((it) => it.weight > 0 && byId.has(it.id)).sort((a, b) => b.weight - a.weight)
-    .map((it) => `${AX.factorName(byId.get(it.id), it)}${it.low ? ' (less is better)' : ''}, ${AX.WEIGHT[it.weight].toLowerCase()}`);
-  el.textContent = parts.length ? parts.join(' · ') : 'nothing yet. Answer the questions above or add a factor.';
+  const on = AX.mixItems().filter((it) => it.weight > 0 && byId.has(it.id));
+  const share = AX.shares(on);
+  if (!on.length) {
+    const li = document.createElement('li');
+    li.textContent = 'No factors yet. Answer the questions above, or add a factor below.';
+    ul.replaceChildren(li);
+    return;
+  }
+  ul.replaceChildren(...on.sort((a, b) => b.weight - a.weight).map((it) => {
+    const f = byId.get(it.id);
+    const li = document.createElement('li');
+    const meta = document.createElement('span');
+    meta.className = 'lm-score-meta';
+    meta.textContent = `: ${share.get(it)}% of score \u00b7 ${AX.WEIGHT[it.weight]} \u00b7 ${it.low ? 'less is better' : 'more is better'}`;
+    li.append(AX.mark('b', AX.factorName(f, it), 'factors', 'label', 'id=' + f.id), meta);
+    return li;
+  }));
 });
 
 dash.draw('recipe', {
@@ -1253,6 +1327,7 @@ dash.draw('recipe', {
     const byId = new Map(fc.data.map((f) => [f.id, f]));
     const items = AX.mixItems().filter((it) => byId.has(it.id));
     const save = (next) => dash.setParams({mix: AX.mixString(next)});
+    const share = AX.shares(items);
     made.list.replaceChildren(...items.map((it, idx) => {
       const f = byId.get(it.id);
       const row = document.createElement('div');
@@ -1271,13 +1346,16 @@ dash.draw('recipe', {
       AX.WEIGHT.forEach((label, w) => sel.append(new Option(label, String(w))));
       sel.value = String(it.weight);
       sel.onchange = () => save(items.map((x, j) => (j === idx ? {...x, weight: Number(sel.value)} : x)));
+      const pct = document.createElement('span');
+      pct.className = 'lm-item-share';
+      pct.textContent = it.weight > 0 ? `${share.get(it)}% of score` : 'not counted';
       const rm = document.createElement('button');
       rm.type = 'button';
       rm.className = 'lm-btn';
       rm.textContent = 'Remove';
       rm.setAttribute('aria-label', 'Remove ' + AX.factorName(f, it));
       rm.onclick = () => save(items.filter((x, j) => j !== idx));
-      row.append(text, sel, rm);
+      row.append(text, sel, pct, rm);
       return row;
     }));
     if (!items.length) made.list.replaceChildren(AX.mark('p', 'No factors yet. Answer the questions above, or add one below.'));
@@ -1523,9 +1601,13 @@ dash.draw('profile', (el) => {
   });
 
   const items = AX.mixItems().filter((it) => it.weight > 0 && byId.has(it.id)).sort((x, y) => y.weight - x.weight);
+  const share = AX.shares(items);
   const listTitle = document.createElement('p');
   listTitle.className = 'lm-fx-meta';
   listTitle.textContent = 'Points on each factor';
+  // Say which factors this county has no data for, since its score leaves them out.
+  const missing = items.filter((it) => r['p_' + AX.mixKey(it)] == null).map((it) => AX.factorName(byId.get(it.id), it));
+  if (missing.length) listTitle.textContent += `. No data for ${missing.join(' or ')}, so the score uses the other factors.`;
   const list = document.createElement('div');
   list.className = 'lm-fx-list';
   items.forEach((it) => {
@@ -1553,7 +1635,7 @@ dash.draw('profile', (el) => {
     track.append(bar);
     const meta = document.createElement('div');
     meta.className = 'lm-fx-meta';
-    meta.append(v == null ? 'No data' : AX.mark('span', AX.fmt(v, f), 'market', 'v_' + k, where), (AX.UNIT[f.unit] || '') + ` · ${it.low ? 'less is better' : 'more is better'} · weight ${AX.WEIGHT[it.weight].toLowerCase()}`);
+    meta.append(v == null ? 'No data' : AX.mark('span', AX.fmt(v, f), 'market', 'v_' + k, where), (AX.UNIT[f.unit] || '') + ` · ${it.low ? 'less is better' : 'more is better'} · ${share.get(it)}% of the score`);
     fx.append(top, track, meta);
     list.append(fx);
   });
@@ -1566,10 +1648,13 @@ const marketColumns = () => {
   const a = AX.aud();
   const byId = new Map(fc.status === 'ok' ? fc.data.map((f) => [f.id, f]) : []);
   const items = AX.mixItems().filter((it) => it.weight > 0 && byId.has(it.id)).sort((x, y) => y.weight - x.weight);
+  const share = AX.shares(items);
   const nwAge = byId.has('median_net_worth') ? AX.urbanAge('median_net_worth', a) : 'All';
   const factorCols = items.map((it) => {
     const f = byId.get(it.id);
-    return {field: 'v_' + AX.mixKey(it), pts: 'p_' + AX.mixKey(it), label: AX.factorName(f, it) + (it.low ? ' (less is better)' : ''), fmt: (v) => (v == null ? '' : AX.fmt(v, f)), num: true};
+    return {field: 'v_' + AX.mixKey(it), pts: 'p_' + AX.mixKey(it), share: share.get(it), factor: f,
+      name: AX.factorName(f, it) + (it.low ? ' (less is better)' : ''),
+      label: `${AX.factorName(f, it)}${it.low ? ' (less is better)' : ''} (${share.get(it)}%)`, fmt: (v) => (v == null ? '' : AX.fmt(v, f)), num: true};
   });
   const has = (id, age) => items.some((it) => it.id === id && it.age === age);
   const fixed = [
@@ -1586,6 +1671,60 @@ const marketColumns = () => {
     ...fixed,
   ];
 };
+
+/* ---------- Download the ranking as a CSV ---------- */
+// Every county in the current ranking (or the 100 largest, when that box is checked), with each factor's value and points.
+const rankingCsv = () => {
+  const r = dash.data('ranked_market');
+  if (r.status !== 'ok' || !r.data) return null;
+  let rows = r.data;
+  if (AX.mlarge) {
+    const big = new Set(rows.slice().sort((x, y) => (y.residents || 0) - (x.residents || 0)).slice(0, 100).map((d) => d.geoid));
+    rows = rows.filter((d) => big.has(d.geoid));
+  }
+  const unitNote = (f) => (f.unit === 'usd' ? ' ($)' : f.unit === 'share' || f.unit === 'pct' ? ' (%)' : AX.UNIT[f.unit] ? ` (${AX.UNIT[f.unit].trim()})` : '');
+  const head = [], get = [];
+  marketColumns().forEach((c) => {
+    if (c.factor) {
+      head.push(`${c.name} [${c.share}% of score] value${unitNote(c.factor)}`); get.push((d) => d[c.field]);
+      head.push(`${c.name} [${c.share}% of score] points (0-100)`); get.push((d) => d[c.pts]);
+    } else if (c.field === 'state') {
+      head.push('State', 'County FIPS code'); get.push((d) => d.state, (d) => d.geoid);
+    } else if (c.field === 'median_net_worth') {
+      head.push(c.label + ' ($)'); get.push((d) => d[c.field]);
+    } else {
+      head.push(c.label); get.push((d) => d[c.field]);
+    }
+  });
+  const cell = (v) => { if (v == null) return ''; const t = String(v); return /[",\n]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t; };
+  return [head, ...rows.map((d) => get.map((g) => g(d)))].map((line) => line.map(cell).join(',')).join('\r\n') + '\r\n';
+};
+(() => {
+  const showMsg = (show) => document.querySelectorAll('#lm-download-msg').forEach((m) => { m.hidden = !show; });
+  const save = async () => {
+    const csv = rankingCsv();
+    if (!csv) return;
+    const d = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    const name = `agetech-launch-markets-${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}.csv`;
+    const data = '\ufeff' + csv;
+    if (window.claude && typeof window.claude.use === 'function') {
+      // Inside Claude, the page asks the viewer to save the file.
+      let dl = null;
+      try { dl = await window.claude.use('downloads'); } catch (e) { dl = null; }
+      if (!dl) { showMsg(true); return; }
+      try { await dl.save({filename: name, data}); showMsg(false); } catch (e) { showMsg(!e || e.code !== 'declined'); }
+      return;
+    }
+    const url = URL.createObjectURL(new Blob([data], {type: 'text/csv;charset=utf-8'}));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = name;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+  };
+  document.querySelectorAll('#lm-download').forEach((b) => b.addEventListener('click', save));
+})();
 
 dash.draw('market-head', (thead) => {
   const cols = marketColumns();
@@ -1909,7 +2048,7 @@ dash.draw('ranking-body', (tb) => {
 });
 </script>
 <footer class="site-footer" id="site-footer">
-  <p>Data: Urban Institute, <a href="https://datacatalog.urban.org/dataset/metrics-data-aging-opportunity-dashboard" target="_blank" rel="noopener">Metrics Data for the Aging Opportunity Dashboard</a> (ODC-BY 1.0); U.S. Census Bureau population estimates, Gazetteer, County Business Patterns and county boundaries; CMS Medicare Advantage and nursing home files; USDA Economic Research Service Rural-Urban Continuum Codes. See "About the data" for years and definitions.</p>
+  <p>Data: Urban Institute, <a href="https://datacatalog.urban.org/dataset/metrics-data-aging-opportunity-dashboard" target="_blank" rel="noopener">Metrics Data for the Aging Opportunity Dashboard</a> (ODC-BY 1.0); U.S. Census Bureau <a href="https://www.census.gov/data/datasets/time-series/demo/popest/2020s-counties-detail.html" target="_blank" rel="noopener">county population estimates</a>, <a href="https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.html" target="_blank" rel="noopener">Gazetteer</a>, <a href="https://www.census.gov/programs-surveys/cbp.html" target="_blank" rel="noopener">County Business Patterns</a> and <a href="https://www.census.gov/geographies/mapping-files/time-series/geo/cartographic-boundary.html" target="_blank" rel="noopener">county boundaries</a>; CMS <a href="https://www.cms.gov/data-research/statistics-trends-and-reports/medicare-advantagepart-d-contract-and-enrollment-data/ma-state/county-penetration" target="_blank" rel="noopener">Medicare Advantage penetration</a> and <a href="https://data.cms.gov/provider-data/dataset/4pq5-n9py" target="_blank" rel="noopener">nursing home provider data</a>; USDA Economic Research Service <a href="https://www.ers.usda.gov/data-products/rural-urban-continuum-codes" target="_blank" rel="noopener">Rural-Urban Continuum Codes</a>. See "About the data" for years and definitions.</p>
   <p>Data as of November 2026. Built for <a href="https://www.agetech-ventures.com/">AgeTech Ventures</a>.</p>
 </footer>
 </main>
