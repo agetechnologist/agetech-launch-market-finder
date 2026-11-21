@@ -7,65 +7,49 @@
 <meta name="description" content="Where should you build your next AgeTech company? Answer a few questions and see how every US county scores, using Urban Institute, Census, CMS and USDA data.">
 <meta property="og:title" content="AgeTech Launch Market Finder">
 <meta property="og:description" content="Answer a few questions about your AgeTech company and see how every US county scores as a launch market.">
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@400;700&display=swap">
 <style>
-/* Theme tokens the dashboard page expects. Light values first, dark values for the OS dark setting. */
+/* Look matched to the AgeTech Ventures blog: Playfair Display headings, Libre Baskerville text,
+   charcoal on white, purple accent, light theme only. Tokens the dashboard page expects come first. */
 :root {
   color-scheme: light;
-  --color-bg: #f7f7f4;
+  --accent: #682f99;
+  --accent-dark: #5b2985;
+  --color-bg: #ffffff;
   --color-panel: #ffffff;
-  --color-fg: #1f1e1c;
-  --color-fg-muted: #66655e;
-  --color-border-line: #e2e0d9;
+  --color-fg: #363737;
+  --color-fg-muted: #757575;
+  --color-border-line: #e6e6e6;
   --color-ok: #1a7f37;
   --color-warn: #b7791f;
   --color-bad: #c0392b;
-  --cds-text-secondary: #57564f;
-  --cds-chart-grid: #ecebe5;
-  --cds-chart-axis: #c8c6be;
-  --cds-chart-reference: #8a8880;
-  --cds-chart-muted: #c8c6be;
+  --cds-text-secondary: #5c5d5d;
+  --cds-chart-grid: #f0f0f0;
+  --cds-chart-axis: #dddddd;
+  --cds-chart-reference: #929292;
+  --cds-chart-muted: #dddddd;
   --cds-surface-popover: #ffffff;
-  --cds-border: rgba(20, 20, 18, 0.12);
-  --cds-shadow-popover: 0 6px 20px rgba(20, 20, 18, 0.14);
-  --series-1: #2a78d6;
+  --cds-border: rgba(54, 55, 55, 0.14);
+  --cds-shadow-popover: 0 6px 20px rgba(54, 55, 55, 0.14);
+  --series-1: #682f99;
   --series-2: #eb6834;
   --series-3: #1baf7a;
-  --font-anthropic-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-anthropic-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-anthropic-sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-anthropic-serif: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-text: "Libre Baskerville", Georgia, "Times New Roman", serif;
   --cds-font-size-caption: 0.8125rem;
   --cds-font-size-body: 0.9375rem;
-  --cds-font-size-heading: 1.125rem;
-  --cds-font-size-title: 2rem;
+  --cds-font-size-heading: 1.25rem;
+  --cds-font-size-title: 2.25rem;
   --cds-font-weight-medium: 600;
-  --cds-gap-xs: 4px; --cds-gap-sm: 8px; --cds-gap-md: 12px; --cds-gap-lg: 20px; --cds-gap-xl: 28px;
+  --cds-gap-xs: 4px; --cds-gap-sm: 8px; --cds-gap-md: 12px; --cds-gap-lg: 22px; --cds-gap-xl: 30px;
   --cds-pad-xs: 4px; --cds-pad-sm: 8px; --cds-pad-md: 12px; --cds-pad-lg: 18px; --cds-pad-xl: 24px;
-  --cds-radius: 10px;
+  --cds-radius: 8px;
   --cds-dur-slow: 400ms;
   --cds-ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-    --color-bg: #161615;
-    --color-panel: #1f1f1d;
-    --color-fg: #efeee9;
-    --color-fg-muted: #a7a59d;
-    --color-border-line: #3a3935;
-    --color-ok: #3fb950;
-    --color-warn: #d9a441;
-    --color-bad: #e66767;
-    --cds-text-secondary: #c3c2b7;
-    --cds-chart-grid: #2d2c29;
-    --cds-chart-axis: #4a4944;
-    --cds-chart-reference: #8f8d85;
-    --cds-chart-muted: #4a4944;
-    --cds-surface-popover: #2a2926;
-    --cds-border: rgba(255, 255, 255, 0.12);
-    --cds-shadow-popover: 0 6px 20px rgba(0, 0, 0, 0.5);
-    --series-1: #3987e5;
-    --series-2: #d95926;
-    --series-3: #199e70;
-  }
 }
 html { background: var(--color-bg); }
 body {
@@ -77,6 +61,26 @@ body {
   line-height: 1.45;
   -webkit-text-size-adjust: 100%;
 }
+[hidden] { display: none !important; }
+a { color: var(--accent); }
+
+/* Blog-style header: logo back to the blog, Subscribe on the right. */
+.site-header { border-bottom: 1px solid var(--color-border-line); background: var(--color-bg); }
+.site-header-inner {
+  max-width: 1180px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding-block: 12px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.site-logo { display: inline-flex; align-items: center; min-width: 0; }
+.site-logo img { display: block; height: 30px; width: auto; max-width: 100%; }
+.site-subscribe {
+  flex: none; font-family: var(--font-anthropic-sans); font-weight: 600; font-size: 0.9375rem; text-decoration: none;
+  color: #ffffff; background: var(--accent); border-radius: 8px; padding: 8px 16px;
+}
+.site-subscribe:hover { background: var(--accent-dark); }
+.site-subscribe:focus-visible, .site-logo:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
 #dash-root {
   max-width: 1180px;
   margin: 0 auto;
@@ -84,8 +88,26 @@ body {
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
-[hidden] { display: none !important; }
-a { color: var(--series-1); }
+
+/* Headings in Playfair Display, reading text in Libre Baskerville; controls, labels and numbers stay in a plain sans. */
+#dash-root .ax-title { font-weight: 700; letter-spacing: -0.01em; }
+#dash-root .ax-card h2, #dash-root .lm-step-title { font-family: var(--font-anthropic-serif); font-weight: 700; }
+#dash-root .ax-kpi-value, #dash-root .lm-prof-score { font-weight: 700; }
+#dash-root .ax-intro, #dash-root .ax-lede, #dash-root .ax-desc,
+#dash-root .lm-about-list, #dash-root .lm-about-notes, #dash-root .lm-about-table td { font-family: var(--font-text); }
+#dash-root .ax-intro { font-size: 1.0625rem; line-height: 1.6; color: var(--cds-text-secondary); }
+#dash-root .ax-lede { line-height: 1.65; }
+#dash-root .ax-desc { line-height: 1.55; }
+#dash-root .ax-lede b, #dash-root .lm-about-notes b { font-weight: 700; }
+
+/* Purple accent where the page marks something chosen or clickable. */
+#dash-root .lm-tab.is-on { border-bottom-color: var(--accent); }
+#dash-root .lm-opt input { accent-color: var(--accent); }
+#dash-root .lm-btn-primary { background-color: var(--accent); border-color: var(--accent); color: #ffffff; }
+#dash-root .lm-btn-primary:hover { background-color: var(--accent-dark); }
+#dash-root .lm-tab:focus-visible, #dash-root .lm-row:focus-visible, #dash-root .lm-btn:focus-visible,
+#dash-root .lm-opt input:focus-visible, #dash-root .ax-input:focus-visible { outline-color: var(--accent); }
+
 /* Dashboard-look select: the arrow sits in the right padding. */
 .dash-select {
   font: inherit;
@@ -96,16 +118,20 @@ a { color: var(--series-1); }
   padding: 6px 30px 6px 10px;
   appearance: none;
   -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23888780' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23868787' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 10px center;
   cursor: pointer;
 }
-.dash-select:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 1px; }
+.dash-select:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 /* Placeholder bar while a number loads. */
 .dash-skeleton { color: transparent !important; background-color: var(--color-border-line); border-radius: 6px; display: inline-block; min-width: 4ch; }
-.site-footer { margin-top: 36px; padding-top: 16px; border-top: 1px solid var(--color-border-line); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.5; max-width: 80ch; }
+.site-footer { margin-top: 36px; padding-top: 16px; border-top: 1px solid var(--color-border-line); font-family: var(--font-text); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.6; max-width: 80ch; }
 .site-footer p { margin: 0 0 6px; }
+@media (max-width: 420px) {
+  .site-logo img { height: 24px; }
+  .site-subscribe { padding: 7px 12px; font-size: 0.875rem; }
+}
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
@@ -113,6 +139,12 @@ a { color: var(--series-1); }
 <script src="dash-runtime.js"></script>
 </head>
 <body>
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-logo" href="https://www.agetech-ventures.com/" aria-label="AgeTech Ventures, back to the blog"><img src="logo.png" alt="AgeTech Ventures" width="154" height="30"></a>
+    <a class="site-subscribe" href="https://www.agetech-ventures.com/subscribe">Subscribe</a>
+  </div>
+</header>
 <main id="dash-root">
 <style>
 /* Layout: header and tabs; tab 1 runs top to bottom as survey -> recipe -> filters -> results (map beside the county profile when wide) -> ranking; tab 2 is the single-metric explorer. */
@@ -221,7 +253,7 @@ a { color: var(--series-1); }
 .lm-prof-score { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: 2.6rem; line-height: 1; }
 .lm-prof-score small { font-family: var(--font-anthropic-sans); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin-left: 6px; }
 .lm-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); gap: var(--cds-gap-sm) var(--cds-gap-md); margin: 0; }
-.lm-facts div { display: grid; gap: 2px; min-width: 0; }
+.lm-facts div { display: flex; flex-direction: column; justify-content: space-between; gap: 2px; min-width: 0; }
 .lm-facts dt { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
 .lm-facts dd { margin: 0; font-variant-numeric: tabular-nums; font-weight: var(--cds-font-weight-medium); }
 .lm-fx-list { display: grid; gap: var(--cds-gap-md); }
@@ -1878,7 +1910,7 @@ dash.draw('ranking-body', (tb) => {
 </script>
 <footer class="site-footer" id="site-footer">
   <p>Data: Urban Institute, <a href="https://datacatalog.urban.org/dataset/metrics-data-aging-opportunity-dashboard" target="_blank" rel="noopener">Metrics Data for the Aging Opportunity Dashboard</a> (ODC-BY 1.0); U.S. Census Bureau population estimates, Gazetteer, County Business Patterns and county boundaries; CMS Medicare Advantage and nursing home files; USDA Economic Research Service Rural-Urban Continuum Codes. See "About the data" for years and definitions.</p>
-  <p>Data as of November 2026. Built for <a href="https://www.agetech-ventures.com/" target="_blank" rel="noopener">AgeTech Ventures</a>.</p>
+  <p>Data as of November 2026. Built for <a href="https://www.agetech-ventures.com/">AgeTech Ventures</a>.</p>
 </footer>
 </main>
 </body>
