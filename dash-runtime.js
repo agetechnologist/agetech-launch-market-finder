@@ -1,6 +1,6 @@
 /* Stand-in for the Claude dashboard engine, so the Launch Market Finder page runs as a plain website.
    It provides the parts of `dash` the page uses: data files, loaders, calcs, drawings, filters and links.
-   Defaults and file paths come from window.DASH_CONFIG, written by build_site.py. */
+   Defaults and file paths come from window.DASH_CONFIG, set in config.js. */
 (function () {
   const CONFIG = window.DASH_CONFIG || {datasets: {}, params: {}};
   const sources = {};      // id -> {status, data, columns, meta, message}
