@@ -65,7 +65,7 @@ body {
 [hidden] { display: none !important; }
 a { color: var(--accent); }
 
-/* Blog-style header: logo back to the blog, Subscribe on the right. */
+/* Blog-style header: logo back to the blog; a text link back to the blog and Subscribe on the right. */
 .site-header { border-bottom: 1px solid var(--color-border-line); background: var(--color-bg); }
 .site-header-inner {
   max-width: 1180px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px;
@@ -80,7 +80,10 @@ a { color: var(--accent); }
   color: #ffffff; background: var(--accent); border-radius: 8px; padding: 8px 16px;
 }
 .site-subscribe:hover { background: var(--accent-dark); }
-.site-subscribe:focus-visible, .site-logo:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.site-actions { flex: none; display: flex; align-items: center; gap: 16px; }
+.site-blog { font-family: var(--font-anthropic-sans); font-weight: 600; font-size: 0.9375rem; text-decoration: none; color: var(--accent); white-space: nowrap; }
+.site-blog:hover { text-decoration: underline; }
+.site-subscribe:focus-visible, .site-logo:focus-visible, .site-blog:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
 #dash-root {
   max-width: 1180px;
@@ -132,6 +135,8 @@ a { color: var(--accent); }
 @media (max-width: 420px) {
   .site-logo img { height: 24px; }
   .site-subscribe { padding: 7px 12px; font-size: 0.875rem; }
+  .site-actions { gap: 10px; }
+  .site-blog { font-size: 0.875rem; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
@@ -143,7 +148,10 @@ a { color: var(--accent); }
 <header class="site-header">
   <div class="site-header-inner">
     <a class="site-logo" href="https://www.agetech-ventures.com/" aria-label="AgeTech Ventures, back to the blog"><img src="logo.png" alt="AgeTech Ventures" width="154" height="30"></a>
-    <a class="site-subscribe" href="https://www.agetech-ventures.com/subscribe" target="_blank" rel="noopener">Subscribe</a>
+    <nav class="site-actions" aria-label="AgeTech Ventures">
+      <a class="site-blog" href="https://www.agetech-ventures.com/">Read the blog</a>
+      <a class="site-subscribe" href="https://www.agetech-ventures.com/subscribe" target="_blank" rel="noopener">Subscribe</a>
+    </nav>
   </div>
 </header>
 <main id="dash-root">
